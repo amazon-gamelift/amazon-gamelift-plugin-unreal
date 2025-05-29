@@ -13,7 +13,7 @@ Get-ChildItem -Path "$rootDir\Temp\downloads" | Where-Object { $_.Name -ne 'Game
     Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-Remove-Item -Path "$rootDir\GameLiftServerSDK\Source\GameLiftServerSDK\private\aws" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "$rootDir\GameLiftServerSDK\Source\GameLiftServerSDK\Private\aws" -Recurse -Force -ErrorAction SilentlyContinue
 
 Get-ChildItem -Path "$rootDir\GameLiftServerSDK\ThirdParty" | Where-Object { $_.Name -ne '.gitkeep' } | ForEach-Object {
     Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
