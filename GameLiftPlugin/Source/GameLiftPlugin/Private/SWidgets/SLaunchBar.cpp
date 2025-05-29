@@ -15,6 +15,7 @@
 void SLaunchBar::Construct(const FArguments& InArgs) 
 {
 	ClientBuildExecutablePath = InArgs._DefaultClientBuildExecutablePath;
+	ClientBuildLauncherArguments = InArgs._DefaultClientBuildLauncherArguments;
 	OnStartClientButtonClicked = InArgs._OnStartClientButtonClicked;
 	OnStartClientButtonClickedWith2Players = InArgs._OnStartClientButtonClickedWith2Players;
 	OnStartServerButtonClicked = InArgs._OnStartServerButtonClicked;
@@ -94,8 +95,6 @@ void SLaunchBar::Construct(const FArguments& InArgs)
 						]
 				]
 		];
-
-	CreateClientBuildModal();
 }
 
 TSharedRef<SWidget> SLaunchBar::CreateUpdateDeploymentButton() 
@@ -176,6 +175,7 @@ TSharedRef<SClientBuildModal> SLaunchBar::CreateClientBuildModal()
 	return SAssignNew(ClientBuildModal, SClientBuildModal)
 		.ParentWidget(ParentWidget)
 		.DefaultClientBuildExecutablePath(ClientBuildExecutablePath.Get())
+		.DefaultClientBuildLauncherArguments(ClientBuildLauncherArguments.Get())
 		.OnStartClientClickedDelegate(FStartClient::CreateRaw(this, &SLaunchBar::OnStartClientButtonPressed));
 }
 
@@ -196,15 +196,18 @@ void SLaunchBar::OnCheckboxStateChanged(ECheckBoxState NewState)
 	IsTwoPlayerClientSelected = (NewState == ECheckBoxState::Checked);
 }
 
-void SLaunchBar::OnStartClientButtonPressed(FString ClientBuildPathExecutable)
+void SLaunchBar::OnStartClientButtonPressed(FString ClientBuildPathExecutable, FString LauncherArgs)
 {
+	ClientBuildExecutablePath = ClientBuildPathExecutable;
+	ClientBuildLauncherArguments = LauncherArgs;
+
 	if (IsTwoPlayerClientSelected)
 	{
-		OnStartClientButtonClickedWith2Players.ExecuteIfBound(ClientBuildPathExecutable);
+		OnStartClientButtonClickedWith2Players.ExecuteIfBound(ClientBuildPathExecutable, LauncherArgs);
 	}
 	else
 	{
-		OnStartClientButtonClicked.ExecuteIfBound(ClientBuildPathExecutable);
+		OnStartClientButtonClicked.ExecuteIfBound(ClientBuildPathExecutable, LauncherArgs);
 	}
 }
 
@@ -261,6 +264,9 @@ TSharedRef<SButton> SLaunchBar::CreateStartClientButton()
 		.ContentPadding(SPadding::LaunchBarButtonPadding)
 		.OnClicked_Lambda([&] 
 			{
+				// This ensures client build modal is built before calling ShowModal everytime
+				// preventing different order of operations causing ensure condition failed exceptions
+				CreateClientBuildModal();
 				ClientBuildModal->ShowModal();
 				return FReply::Handled();
 			})

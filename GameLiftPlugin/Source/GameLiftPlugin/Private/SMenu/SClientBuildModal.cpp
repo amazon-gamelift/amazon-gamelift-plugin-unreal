@@ -6,6 +6,7 @@
 #include "GameLiftPluginConstants.h"
 #include "GameLiftPluginStyle.h"
 #include "Widgets/Text/STextBlock.h"
+#include "Widgets/Text/SRichTextBlock.h"
 #include "Widgets/Layout/SBorder.h"
 #include "Widgets/Layout/SBox.h"
 #include "SWidgets/SPathInput.h"
@@ -16,6 +17,7 @@
 void SClientBuildModal::Construct(const FArguments& InArgs)
 {
     ClientBuildExecutablePath = InArgs._DefaultClientBuildExecutablePath;
+    ClientBuildLauncherArguments = InArgs._DefaultClientBuildLauncherArguments;
     OnStartClientClickedDelegate = InArgs._OnStartClientClickedDelegate;
     ParentWidget = InArgs._ParentWidget;
 
@@ -85,6 +87,13 @@ void SClientBuildModal::Construct(const FArguments& InArgs)
                                                 [
                                                     CreateGameClientPathInput()
                                                 ]
+                                                // Game client launcher args input
+                                                + SVerticalBox::Slot()
+                                                .AutoHeight()
+                                                .Padding(SPadding::Top_Bottom2x)
+                                                [
+                                                    CreateGameClientLauncherArgumentsInput()
+                                                ]
                                                 // Buttons
                                                 + SVerticalBox::Slot()
                                                 .AutoHeight()
@@ -149,6 +158,7 @@ void SClientBuildModal::ShowModal()
         ParentWidget.Pin()->SetEnabled(false);
     }
     GameClientExecutablePathInput->SetSelectedPath(ClientBuildExecutablePath);
+    GameClientLauncherArgumentsInput->SetText(FText::FromString(ClientBuildLauncherArguments));
 }
 
 void SClientBuildModal::CloseModal()
@@ -165,7 +175,8 @@ FReply SClientBuildModal::OnStartClientClicked() {
     CloseModal();
 
     ClientBuildExecutablePath = ClientBuildExecutablePathToUpdate;
-    OnStartClientClickedDelegate.ExecuteIfBound(ClientBuildExecutablePath);
+    ClientBuildLauncherArguments = GameClientLauncherArgumentsInput.Get()->GetText().ToString();
+    OnStartClientClickedDelegate.ExecuteIfBound(ClientBuildExecutablePath, ClientBuildLauncherArguments);
 
     return FReply::Handled();
 }
@@ -203,6 +214,35 @@ TSharedRef<SWidget> SClientBuildModal::CreateGameClientPathInput()
                 .FillWidth(1.0f)
                 [
                     GameClientExecutablePathInput.ToSharedRef()
+                ]
+        ];
+}
+
+TSharedRef<SWidget> SClientBuildModal::CreateGameClientLauncherArgumentsInput()
+{
+    SAssignNew(GameClientLauncherArgumentsInput, SEditableTextBox)
+        .HintText(Menu::DeployCommon::kGameClientLauncherArgumentsHint)
+        .ToolTipText(Menu::DeployCommon::kGameClientLauncherArgumentsTooltip);
+
+    return SNew(SVerticalBox)
+        + SVerticalBox::Slot()
+        .AutoHeight()
+        .Padding(SPadding::Top)
+        [
+            SNew(SHorizontalBox)
+                + SHorizontalBox::Slot()
+                .AutoWidth()
+                .Padding(SPadding::Right2x)
+                .VAlign(VAlign_Center)
+                [
+                    SNew(STextBlock)
+                        .Text(Menu::DeployCommon::kGameClientLauncherArgumentsTitle)
+                        .TextStyle(FGameLiftPluginStyle::Get(), Style::Text::kParagraph)
+                ]
+                + SHorizontalBox::Slot()
+                .FillWidth(1.0f)
+                [
+                    GameClientLauncherArgumentsInput.ToSharedRef()
                 ]
         ];
 }

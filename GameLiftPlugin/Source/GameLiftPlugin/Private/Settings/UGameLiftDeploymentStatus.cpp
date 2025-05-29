@@ -42,6 +42,7 @@ void UGameLiftDeploymentStatus::ResetStatus()
 	DeploySettings->ExtraServerResourcesPath = FText::FromString(Paths::DefaultExtraServerResourcesPath());
 	DeploySettings->OutConfigFilePath = FText::FromString(Paths::DefaultOutConfigFilePath());
 	DeploySettings->GameClientFilePath = FText::GetEmpty();
+	DeploySettings->GameClientLauncherArguments = FText::GetEmpty();
 	DeploySettings->DeployedRegion = FText::GetEmpty();
 	DeploySettings->ApiGatewayEndpoint = FText::GetEmpty();
 	DeploySettings->CognitoClientId = FText::GetEmpty();

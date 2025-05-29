@@ -3,6 +3,8 @@
 
 #include "SIntakeQuestionnaireSection.h"
 
+#include <Widgets/Layout/SWidgetSwitcher.h>
+#include <Settings/UGameLiftContainersStatus.h>
 #include <Types/EContainersDeploymentScenario.h>
 #include <GameLiftPluginConstants.h>
 

@@ -1,0 +1,15 @@
+.vs/
+*.suo
+*.opendb
+*.db
+*.sln
+*.ini
+*.iml
+Temp/
+Out/
+.DS_Store
+.idea/*
+GameLiftServerSDK/Source/GameLiftServerSDK/Private/aws/*
+GameLiftServerSDK/Source/GameLiftServerSDK/Public/aws/*
+GameLiftServerSDK/ThirdParty/*
+GameLiftPlugin/Source/GameLiftServer/*

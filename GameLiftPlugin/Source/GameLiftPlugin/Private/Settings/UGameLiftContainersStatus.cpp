@@ -3,6 +3,7 @@
 
 #include "UGameLiftContainersStatus.h"
 #include <Types/EContainersDeploymentScenario.h>
+#include <Types/EDeploymentMessageState.h>
 
 UGameLiftContainersStatus::UGameLiftContainersStatus(const FObjectInitializer & ObjectInitializer)
     : Super(ObjectInitializer)
@@ -26,6 +27,7 @@ void UGameLiftContainersStatus::ResetStatus()
 {
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
     ContainersStatus->GameClientExecutablePath.Empty();
+    ContainersStatus->GameClientLauncherArguments.Empty();
     ContainersStatus->GameServerBuildPath.Empty();
     ContainersStatus->GameServerExecutablePath.Empty();
     ContainersStatus->ECRRepoName = (Menu::DeployContainers::kECRRepoNameDefault).ToString();

@@ -7,6 +7,8 @@
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/SCompoundWidget.h"
 #include "SWidgets/STextStatus.h"
+#include "SWidgets/SProgressBar.h"
+#include "Types/EDeploymentMessageState.h"
 
 DECLARE_DELEGATE(FOnRetryStep);
 

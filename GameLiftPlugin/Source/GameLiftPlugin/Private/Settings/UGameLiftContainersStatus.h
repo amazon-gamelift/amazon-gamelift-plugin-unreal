@@ -53,6 +53,9 @@ public:
     FString GameClientExecutablePath;
 
     UPROPERTY(config, EditAnywhere, Category = "Containers Status")
+    FString GameClientLauncherArguments;
+
+    UPROPERTY(config, EditAnywhere, Category = "Containers Status")
     FString GameServerBuildPath;
 
     UPROPERTY(config, EditAnywhere, Category = "Containers Status")

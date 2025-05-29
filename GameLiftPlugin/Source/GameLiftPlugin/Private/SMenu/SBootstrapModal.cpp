@@ -13,6 +13,7 @@
 #include "SWidgets/SPathInput.h"
 #include "SWidgets/SNamedRow.h"
 #include "SWidgets/SSetupMessage.h"
+#include "SWidgets/SOnlineHyperlink.h"
 
 #include "Settings/UGameLiftSettings.h"
 

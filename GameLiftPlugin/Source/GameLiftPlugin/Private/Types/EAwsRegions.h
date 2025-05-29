@@ -88,7 +88,7 @@ namespace Aws
 
 	static FString RegionToString(ERegions InRegion)
 	{
-#define CASE_REGION(__v__) case ERegions::##__v__: return Regions::k_##__v__
+#define CASE_REGION(__v__) case ERegions::__v__: return Regions::k_##__v__
 
 		switch (InRegion)
 		{
@@ -125,7 +125,7 @@ namespace Aws
 
 	static FString RegionToNameString(ERegions InRegion)
 	{
-#define CASE_REGION(__v__) case ERegions::##__v__: return RegionNames::k_##__v__
+#define CASE_REGION(__v__) case ERegions::__v__: return RegionNames::k_##__v__
 
 		switch (InRegion)
 		{
@@ -162,7 +162,7 @@ namespace Aws
 
 	static ERegions RegionFromString(const FString& InRegionString)
 	{
-#define ADD_REGION(__v__) { Regions::k_##__v__, ERegions::##__v__ }
+#define ADD_REGION(__v__) { Regions::k_##__v__, ERegions::__v__ }
 
 		static std::unordered_map<std::wstring, ERegions> RegionMap
 		{

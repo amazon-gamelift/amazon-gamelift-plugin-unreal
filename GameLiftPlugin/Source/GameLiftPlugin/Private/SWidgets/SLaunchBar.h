@@ -24,6 +24,8 @@ class SLaunchBar : public SCompoundWidget
 
 	SLATE_ATTRIBUTE(FString, DefaultClientBuildExecutablePath)
 
+	SLATE_ATTRIBUTE(FString, DefaultClientBuildLauncherArguments)
+
 	SLATE_EVENT(FSimpleDelegate, OnStartServerButtonClicked)
 
 	SLATE_EVENT(FStartClient, OnStartClientButtonClicked)
@@ -59,7 +61,7 @@ private:
 	TSharedRef<SClientBuildModal> CreateClientBuildModal();
 	void DisplayUpdateModal();
 	void OnCheckboxStateChanged(ECheckBoxState NewState);
-	void OnStartClientButtonPressed(FString ClientBuildPathExecutable);
+	void OnStartClientButtonPressed(FString ClientBuildPathExecutable, FString LauncherArgs);
 	FReply OnStartServerButtonPressed();
 	int32 LaunchBarUIStateToInt(EStartButtonUIState State)
 	{
@@ -77,6 +79,7 @@ private:
 	TAttribute<bool> IsStartClientButtonEnabled = false;
 	TAttribute<bool> IsUpdateDeploymentButtonEnabled = false;
 	TAttribute<FString> ClientBuildExecutablePath;
+	TAttribute<FString> ClientBuildLauncherArguments;
 
 	EMenuType MenuType;
 	FStartClient OnStartClientButtonClicked;

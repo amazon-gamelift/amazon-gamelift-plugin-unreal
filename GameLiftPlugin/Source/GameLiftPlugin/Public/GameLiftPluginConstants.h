@@ -267,6 +267,9 @@ namespace Menu
 		static const auto kGameClientPathTitle = NSLOCTEXT("SDeployCommon", "GameClientTitle", "Client build executable");
 		static const auto kGameClientPathHint = NSLOCTEXT("SDeployCommon", "GameClientPathHint", "Path to client build executable");
 		static const auto kGameClientPathTooltip = NSLOCTEXT("SDeployCommon", "GameClientPathTooltip", "Specify path to client build executable");
+		static const auto kGameClientLauncherArgumentsTitle = NSLOCTEXT("SDeployCommon", "GameClientLauncherArgumentsTitle", "Command-line arguments - (optional) ");
+		static const auto kGameClientLauncherArgumentsHint = NSLOCTEXT("SDeployCommon", "GameClientLauncherArgumentsHint", "Extra arguments to pass to game client");
+		static const auto kGameClientLauncherArgumentsTooltip = NSLOCTEXT("SDeployCommon", "GameClientPathTooltip", "Specify additional command-line arguments when launching the client");
 
 		static const auto kDeploymentShowOutputLog = NSLOCTEXT("SDeployCommon", "DeploymentShowOutputLog", "Show output log");
 
@@ -296,7 +299,7 @@ namespace Menu
 	{
 		static const auto kConnectToFleetHeader = NSLOCTEXT("DeployAnywhere", "ConnectToFleetHeader", "Connect to an Anywhere fleet");
 		static const auto kRegisterComputeHeader = NSLOCTEXT("DeployAnywhere", "RegisterComputeHeader", "Register your workstation");
-		static const auto kGenerateAuthTokenHeader = NSLOCTEXT("DeployAnywhere", "GenerateAuthTokenHeader", "Generate Auth Token - optional");
+		static const auto kGenerateAuthTokenHeader = NSLOCTEXT("DeployAnywhere", "GenerateAuthTokenHeader", "Generate Auth Token - (optional)");
 		static const auto kModifyPath = NSLOCTEXT("DeployAnywhere", "ModifyPath", "Change server build path");
 
 		// Connect section
@@ -550,7 +553,7 @@ namespace Menu
 		static const auto kMultiLocationFlexMatchDescription = NSLOCTEXT("DeployContainers", "MultiLocationFlexMatchDesciption", "Multi-location with FlexMatch Deploy to one On-Demand fleet with remote locations, and create a game backend, matchmaking, and placement queue to put players into games.");
 
 		// User Input - Default Setting
-		static const auto kDefaultSettingsHeader = NSLOCTEXT("DeployContainers", "DefaultSettingsHeader", "Container deployment settings - optional");
+		static const auto kDefaultSettingsHeader = NSLOCTEXT("DeployContainers", "DefaultSettingsHeader", "Container deployment settings - (optional)");
 		static const auto kDefaultSettingsDescription = NSLOCTEXT("DeployContainers", "DefaultSettingsDescription", "Keep or modify these core settings for your container deployment. You can create a fully customized container definition by using the AWS Management Console or AWS CLI.");
 		static const auto kGameNameText = NSLOCTEXT("DeployContainers", "GameNameText", "Game name");
 		static const auto kGameNameDefault = NSLOCTEXT("DeployContainers", "GameNameDefault", "MyGame");
@@ -1001,7 +1004,7 @@ namespace Url
 	// Context Menu
 	static const auto kOpenGameLiftDocumentationUrl = kGameLiftDocumentationUrl;
 	static const auto kOpenAwsGameTechForumUrl = kGameTechForumUrl;
-	static const auto kReportIssuesUrl = TEXT("https://github.com/aws/amazon-gamelift-plugin-unreal/issues");
+	static const auto kReportIssuesUrl = TEXT("https://github.com/amazon-gamelift/amazon-gamelift-plugin-unreal/issues");
 	static const auto kOpenServiceAPIReferenceUrl = TEXT("https://docs.aws.amazon.com/gamelift/latest/apireference/Welcome.html");
 	static const auto kOpenServerSDKReferenceUrl = TEXT("https://docs.aws.amazon.com/gamelift/latest/developerguide/integration-server-sdk5-cpp.html");
 

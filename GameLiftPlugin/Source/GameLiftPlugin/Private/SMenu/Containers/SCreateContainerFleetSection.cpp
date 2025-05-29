@@ -1,12 +1,15 @@
 #include "SCreateContainerFleetSection.h"
 #include "SWidgets/SOnlineHyperlink.h"
-#include "SWidgets/SProgressBar.h"
+#include "SWidgets/SSetupMessage.h"
+#include "SWidgets/SNamedRow.h"
 #include "SWidgets/SDeploymentStatus.h"
 
 #include <GameLiftPluginConstants.h>
 #include <GameLiftPluginStyle.h>
+#include <GameLiftPlugin.h>
 #include "SMenu/Containers/SCreateContainerGroupSection.h"
 #include <IGameLiftContainersHandler.h>
+#include <IGameLiftCoreModule.h>
 #include <Settings/UGameLiftContainersStatus.h>
 #include <Settings/UGameLiftDeploymentStatus.h>
 #include <Settings/UGameLiftSettings.h>

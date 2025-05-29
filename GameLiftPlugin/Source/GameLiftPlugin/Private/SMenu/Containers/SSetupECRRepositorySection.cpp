@@ -6,9 +6,11 @@
 #include <Async/Async.h>
 #include <iostream>
 
+#include "Widgets/Layout/SWidgetSwitcher.h"
 #include "SWidgets/SOnlineHyperlink.h"
 #include "SWidgets/SNamedRow.h"
 #include "SWidgets/SSelectionComboBox.h"
+#include "SWidgets/SSetupMessage.h"
 #include "SWidgets/SInputTextBox.h"
 
 #include "IGameLiftCoreModule.h"
