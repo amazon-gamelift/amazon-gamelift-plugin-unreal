@@ -134,6 +134,7 @@ public:
     virtual FGameLiftGenericOutcome ActivateGameSession();
     virtual FGameLiftGenericOutcome AcceptPlayerSession(const FString& playerSessionId);
     virtual FGameLiftGenericOutcome RemovePlayerSession(const FString& playerSessionId);
+    virtual FGameLiftGenericOutcome Destroy();
     virtual FGameLiftDescribePlayerSessionsOutcome DescribePlayerSessions(const FGameLiftDescribePlayerSessionsRequest& describePlayerSessionsRequest);
 
     virtual FGameLiftGenericOutcome UpdatePlayerSessionCreationPolicy(EPlayerSessionCreationPolicy policy);

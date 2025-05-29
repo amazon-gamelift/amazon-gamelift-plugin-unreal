@@ -179,6 +179,21 @@ FGameLiftGenericOutcome FGameLiftServerSDKModule::RemovePlayerSession(const FStr
 #endif
 }
 
+FGameLiftGenericOutcome FGameLiftServerSDKModule::Destroy()
+{
+#if WITH_GAMELIFT
+    auto outcome = Aws::GameLift::Server::Destroy();
+    if (outcome.IsSuccess()){
+        return FGameLiftGenericOutcome(nullptr);
+    }
+    else {
+        return FGameLiftGenericOutcome(FGameLiftError(outcome.GetError()));
+    }
+#else
+    return FGameLiftGenericOutcome(nullptr);
+#endif
+}
+
 FGameLiftDescribePlayerSessionsOutcome FGameLiftServerSDKModule::DescribePlayerSessions(const FGameLiftDescribePlayerSessionsRequest &describePlayerSessionsRequest)
 {
 #if WITH_GAMELIFT
