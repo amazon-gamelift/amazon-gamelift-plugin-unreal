@@ -45,7 +45,7 @@ private:
     void OnContainersImageUpdate();
     void OnRetryContainerFleetStep();
     void SetExpandedSections();
-    void OnLaunchClientButtonClicked(FString GameClientPath);
+    void OnLaunchClientButtonClicked(FString GameClientPath, FString LauncherArgs);
     void OnProfileSelectionChanged(const SGameLiftSettingsAwsAccountMenu*);
     void UpdateAWSCredentialsProfileSectionUI();
     TSharedRef<SLaunchBar> CreateLaunchBar();

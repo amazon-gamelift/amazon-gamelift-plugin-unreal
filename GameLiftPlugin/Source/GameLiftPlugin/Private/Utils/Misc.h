@@ -13,29 +13,6 @@
 
 namespace Utils
 {
-	namespace Splitters
-	{
-		inline FString ExtractPathArgs(const FText& Path, TArray<FString>& Args)
-		{
-			FString RunPath = Path.ToString();
-			FString Left, Right;
-			if (RunPath.Split(TEXT(" "), &Left, &Right)) {
-				RunPath = Left;
-				bool GoAhead = true;
-				do {
-					if (Right.Split(TEXT(" "), &Left, &Right)) {
-						Args.Add(Left);
-					}
-					else {
-						Args.Add(Right);
-						GoAhead = false;
-					}
-				} while (GoAhead);
-			}
-			return RunPath;
-		}
-	}
-
 	inline void ShowLaunchProcessMessage(TSharedRef<SSetupMessage> MessageWidget, bool IsLaunched)
 	{
 		if (IsLaunched)

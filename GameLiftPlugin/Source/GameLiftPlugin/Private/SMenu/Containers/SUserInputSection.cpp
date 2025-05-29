@@ -3,14 +3,17 @@
 
 #include "SUserInputSection.h"
 #include "SWidgets/SSectionsWithHeaders.h"
+#include "SResetDeploymentModal.h"
 
-#include <Types/EContainersDeploymentScenario.h>
+#include <Types/EBootstrapMessageState.h>
 #include <GameLiftPluginConstants.h>
+#include <GameLiftPluginStyle.h>
 
 #include <Async/Async.h>
 #include "IGameLiftCoreModule.h"
 #include <Settings/UGameLiftContainersStatus.h>
 #include <Settings/UGameLiftDeploymentStatus.h>
+#include <Settings/UGameLiftSettings.h>
 
 #define LOCTEXT_NAMESPACE "SUserInputSection"
 

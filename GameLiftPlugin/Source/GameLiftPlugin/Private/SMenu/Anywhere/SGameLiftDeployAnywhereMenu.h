@@ -47,7 +47,7 @@ private:
 	void OnComputeChanged();
 
 	void OnLaunchServerButtonClicked();
-	void OnLaunchClientButtonClicked(FString GameClientPath);
+	void OnLaunchClientButtonClicked(FString GameClientPath, FString LauncherArgs);
 
 private:
 	TSharedPtr<SIntegrateGameSection> IntegrateGameSection;

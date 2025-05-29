@@ -3,16 +3,20 @@
 
 #include "SCreateContainerGroupSection.h"
 #include "SWidgets/SOnlineHyperlink.h"
-#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
+#include "SWidgets/SSetupMessage.h"
 
 #include <GameLiftPluginConstants.h>
 #include <GameLiftPluginStyle.h>
 #include <Settings/UGameLiftContainersStatus.h>
 #include <IGameLiftContainersHandler.h>
+#include <IGameLiftCoreModule.h>
 #include <Settings/UGameLiftDeploymentStatus.h>
 #include <Settings/UGameLiftSettings.h>
 #include <GameLiftCoreConstants.h>
+#include <GameLiftPlugin.h>
 #include <Types/EDeploymentMessageState.h>
+#include <Types/EContainersDeploymentScenario.h>
+
 
 #define LOCTEXT_NAMESPACE "SCreateContainerGroupSection"
 

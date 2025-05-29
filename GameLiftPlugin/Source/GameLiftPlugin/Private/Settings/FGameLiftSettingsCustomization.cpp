@@ -9,6 +9,8 @@
 #include <IDetailPropertyRow.h>
 #include <DetailCategoryBuilder.h>
 
+#include "IAWSConfigFileProfile.h"
+#include "IGameLiftCoreModule.h"
 #include "GameLiftPluginConstants.h"
 #include "UGameLiftSettings.h"
 

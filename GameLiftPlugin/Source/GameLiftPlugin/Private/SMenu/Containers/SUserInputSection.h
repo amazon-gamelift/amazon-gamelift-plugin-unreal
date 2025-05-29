@@ -4,12 +4,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IGameLiftContainersHandler.h"
 #include "Widgets/SCompoundWidget.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/Input/SEditableTextBox.h"
 #include "SWidgets/SNamedRow.h"
+#include "SWidgets/SPathInput.h"
 #include "SWidgets/SSelectionComboBox.h"
 #include "Types/EContainersDeploymentScenario.h"
+#include "SIntakeQuestionnaireSection.h"
+#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
 
 class SUserInputSection : public SCompoundWidget
 {

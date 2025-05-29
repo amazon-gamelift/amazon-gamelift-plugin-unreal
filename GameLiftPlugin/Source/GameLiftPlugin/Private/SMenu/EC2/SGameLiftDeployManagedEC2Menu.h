@@ -9,6 +9,7 @@
 #include "SWidgets/SExpandableSection.h"
 #include "SWidgets/SLaunchBar.h"
 #include "SWidgets/SSectionStep.h"
+#include "SWidgets/SSetupMessage.h"
 #include "SWidgets/SSectionsWithProgressBars.h"
 
 struct FTextIntPair;
@@ -46,7 +47,7 @@ private:
 	bool CanLaunchGameClient() const;
 
 	FText TooltipLaunchGameClient() const;
-	void OnLaunchClientButtonClicked(FString GameClientPath);
+	void OnLaunchClientButtonClicked(FString GameClientPath, FString LauncherArgs);
 
 private:
 	TSharedPtr<SSectionsWithProgressBars> SectionsWithProgressBars;

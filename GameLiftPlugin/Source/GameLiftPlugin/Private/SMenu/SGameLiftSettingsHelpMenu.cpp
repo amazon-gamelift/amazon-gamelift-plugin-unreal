@@ -4,6 +4,7 @@
 #include "SGameLiftSettingsHelpMenu.h"
 
 #include "GameLiftPluginConstants.h"
+#include "GameLiftPluginStyle.h"
 #include "SWidgets/SOnlineHyperlink.h"
 
 #define LOCTEXT_NAMESPACE "SGameLiftSettingsHelpMenu"

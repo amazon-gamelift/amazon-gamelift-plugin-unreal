@@ -8,6 +8,9 @@
 #include "Widgets/SCompoundWidget.h"
 #include "SWidgets/SProgressBar.h"
 #include "SWidgets/STextStatus.h"
+#include "SWidgets/SNamedRow.h"
+#include "SWidgets/SSelectionComboBox.h"
+#include "Utils/Notifier.h"
 
 DECLARE_MULTICAST_DELEGATE(FConfigureCgd);
 DECLARE_MULTICAST_DELEGATE(FDeploymentComplete);

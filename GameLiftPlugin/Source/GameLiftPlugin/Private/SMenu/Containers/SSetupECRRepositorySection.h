@@ -8,6 +8,7 @@
 #include "Widgets/SCompoundWidget.h"
 #include "SBuildAndPushToECRSection.h"
 #include "SWidgets/SProgressBar.h"
+#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
 
 
 class SBootstrapStatus;

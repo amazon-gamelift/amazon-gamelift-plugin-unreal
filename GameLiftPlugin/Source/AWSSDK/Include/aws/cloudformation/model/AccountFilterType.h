@@ -7,6 +7,11 @@
 #include <aws/cloudformation/CloudFormation_EXPORTS.h>
 #include <aws/core/utils/memory/stl/AWSString.h>
 
+#ifdef DIFFERENCE
+#undef DIFFERENCE
+#define RESTORE_DIFFERENCE
+#endif
+
 namespace Aws
 {
 namespace CloudFormation
@@ -31,3 +36,8 @@ AWS_CLOUDFORMATION_API Aws::String GetNameForAccountFilterType(AccountFilterType
 } // namespace Model
 } // namespace CloudFormation
 } // namespace Aws
+
+#ifdef RESTORE_DIFFERENCE
+#define DIFFERENCE
+#undef RESTORE_DIFFERENCE
+#endif

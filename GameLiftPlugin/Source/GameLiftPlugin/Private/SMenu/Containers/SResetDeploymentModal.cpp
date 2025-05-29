@@ -4,6 +4,7 @@
 #include "SResetDeploymentModal.h"
 
 #include "SWidgets/SOnlineHyperlink.h"
+#include "SWidgets/SSetupMessage.h"
 #include "GameLiftPluginConstants.h"
 #include "GameLiftPluginStyle.h"
 #include "Widgets/Text/STextBlock.h"
@@ -13,6 +14,7 @@
 #include "SMenu/Containers/SUserInputSection.h"
 #include <Settings/UGameLiftDeploymentStatus.h>
 #include <Settings/UGameLiftSettings.h>
+#include <Settings/UGameLiftContainersStatus.h>
 #include "SMenu/Containers/SGameLiftDeployContainersMenu.h"
 
 #define LOCTEXT_NAMESPACE "SResetDeploymentModal"

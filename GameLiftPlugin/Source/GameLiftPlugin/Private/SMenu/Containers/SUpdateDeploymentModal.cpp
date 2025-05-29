@@ -3,6 +3,7 @@
 
 #include "SUpdateDeploymentModal.h"
 
+#include "IGameLiftCoreModule.h"
 #include "SWidgets/SOnlineHyperlink.h"
 #include "GameLiftPluginConstants.h"
 #include "GameLiftPluginStyle.h"
@@ -11,6 +12,9 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Notifications/SNotificationList.h"
 #include "SGameLiftDeployContainersMenu.h"
+#include "Settings/UGameLiftContainersStatus.h"
+#include "Settings/UGameLiftSettings.h"
+#include "Types/FTextIntPair.h"
 
 #define LOCTEXT_NAMESPACE "SUpdateDeploymentModal"
 
@@ -459,10 +463,10 @@ void SUpdateDeploymentModal::OnExistingImageSelected(int SelectionId, const FTex
 
 bool SUpdateDeploymentModal::CanLoadECRImageDropDown() const
 {
-    UGameLiftSettings* Settings = GetMutableDefault<UGameLiftSettings>();
+    UGameLiftSettings* GameLiftSettings = GetMutableDefault<UGameLiftSettings>();
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
 
-    return EBootstrapMessageStateFromInt(Settings->BootstrapStatus) == EBootstrapMessageState::ActiveMessage &&
+    return EBootstrapMessageStateFromInt(GameLiftSettings->BootstrapStatus) == EBootstrapMessageState::ActiveMessage &&
         ContainersStatus->DeploymentScenario == (int)EContainersDeploymentScenario::HaveContainerImageInEcr &&
         !ContainersStatus->ECRRepoName.IsEmpty();
 }
@@ -569,10 +573,10 @@ ECheckBoxState SUpdateDeploymentModal::IsRadioChecked(EDeploymentScenarioFleetRe
 
 bool SUpdateDeploymentModal::CanLoadECRRepoDropDown() const
 {
-    UGameLiftSettings* Settings = GetMutableDefault<UGameLiftSettings>();
+    UGameLiftSettings* GameLiftSettings = GetMutableDefault<UGameLiftSettings>();
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
 
-    return EBootstrapMessageStateFromInt(Settings->BootstrapStatus) == EBootstrapMessageState::ActiveMessage &&
+    return EBootstrapMessageStateFromInt(GameLiftSettings->BootstrapStatus) == EBootstrapMessageState::ActiveMessage &&
         (ContainersStatus->DeploymentScenario == (int)EContainersDeploymentScenario::NoContainerImageUseExistingEcrRepo ||
             ContainersStatus->DeploymentScenario == (int)EContainersDeploymentScenario::HaveContainerImageInEcr);
 }

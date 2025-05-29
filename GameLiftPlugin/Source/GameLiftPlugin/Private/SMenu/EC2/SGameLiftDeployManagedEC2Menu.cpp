@@ -6,12 +6,13 @@
 #include "SMenu/SCommonMenuSections.h"
 #include "SWidgets/SDeploymentFields.h"
 #include "SWidgets/SDeploymentStatus.h"
-#include "SWidgets/SLaunchBar.h"
 #include "SWidgets/SExpandableSection.h"
+#include "SWidgets/SOnlineHyperlink.h"
 
 #include "SSelectDeploymentScenarioSection.h"
 #include "SDeployScenarioSection.h"
 #include "SGameParametersSection.h"
+#include "GameLiftPlugin.h"
 
 #include "Settings/UGameLiftDeploymentStatus.h"
 
@@ -123,12 +124,14 @@ TSharedRef<SWidget> SGameLiftDeployManagedEC2Menu::CreateLaunchBar()
 {
 	UGameLiftDeploymentStatus* Settings = GetMutableDefault<UGameLiftDeploymentStatus>();
 	FString GameClientPath = Settings->GameClientFilePath.ToString();
+	FString GameClientLauncherArgs = Settings->GameClientLauncherArguments.ToString();
 
 	return SAssignNew(LaunchBar, SLaunchBar)
 		.MenuType(EMenuType::EC2)
 		.ParentWidget(this->AsWeak())
 		.IsEnabled_Raw(this, &SGameLiftDeployManagedEC2Menu::CanLaunchGameClient)
 		.DefaultClientBuildExecutablePath(GameClientPath)
+		.DefaultClientBuildLauncherArguments(GameClientLauncherArgs)
 		.OnStartClientButtonClicked(FStartClient::CreateRaw(this, &SGameLiftDeployManagedEC2Menu::OnLaunchClientButtonClicked));
 }
 
@@ -152,10 +155,11 @@ FText SGameLiftDeployManagedEC2Menu::TooltipLaunchGameClient() const
 	return Menu::DeployManagedEC2::kCanLaunchGameClientTooltipText;
 }
 
-void SGameLiftDeployManagedEC2Menu::OnLaunchClientButtonClicked(FString GameClientPath)
+void SGameLiftDeployManagedEC2Menu::OnLaunchClientButtonClicked(FString GameClientPath, FString LauncherArgs)
 {
 	UGameLiftDeploymentStatus* Settings = GetMutableDefault<UGameLiftDeploymentStatus>();
 	Settings->GameClientFilePath = FText::FromString(GameClientPath);
+	Settings->GameClientLauncherArguments = FText::FromString(LauncherArgs);
 	Settings->SaveConfig();
 
 	if (LaunchBar.IsValid())
@@ -165,13 +169,11 @@ void SGameLiftDeployManagedEC2Menu::OnLaunchClientButtonClicked(FString GameClie
 
 	IsLaunchingGameClient = true;
 
-	TArray<FString> Args;
-	FString RunPath = Utils::Splitters::ExtractPathArgs(Settings->GameClientFilePath, Args);
 
-	Async(EAsyncExecution::Thread, [this, RunPath = MoveTemp(RunPath), Args = MoveTemp(Args), GameClientPath]()
+	Async(EAsyncExecution::Thread, [this, GameClientPath, LauncherArgs]()
 		{
 			auto runner = IGameLiftCoreModule::Get().MakeRunner();
-			bool bIsLaunched = runner->LaunchProcess(RunPath, Args);
+			bool bIsLaunched = runner->LaunchProcess(GameClientPath, { LauncherArgs });
 
 			IsLaunchingGameClient = false;
 

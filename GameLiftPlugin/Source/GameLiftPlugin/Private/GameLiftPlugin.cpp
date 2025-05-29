@@ -154,13 +154,13 @@ void FGameLiftPluginModule::RegisterMenuExtensions()
 	PluginCommands = MakeShareable(new FUICommandList);
 #define MAP_ACTION(__action__) \
 	PluginCommands->MapAction( \
-		FGameLiftPluginCommands::Get().##__action__, \
-		FExecuteAction::CreateRaw(this, &FGameLiftPluginModule::##__action__##ButtonClicked), \
+		FGameLiftPluginCommands::Get().__action__, \
+		FExecuteAction::CreateRaw(this, &FGameLiftPluginModule::__action__##ButtonClicked), \
 		FCanExecuteAction())
 
 #define MAP_HELP_URL_ACTION(__action__) \
 	PluginCommands->MapAction( \
-		FGameLiftPluginCommands::Get().##__action__, \
+		FGameLiftPluginCommands::Get().__action__, \
 		FExecuteAction::CreateLambda([](){ \
 			FPlatformProcess::LaunchURL(Url::k##__action__##Url, nullptr, nullptr); \
 		}), \

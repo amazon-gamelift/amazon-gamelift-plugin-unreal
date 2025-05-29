@@ -10,6 +10,7 @@
 #include "Widgets/SCompoundWidget.h"
 #include "SWidgets/SExternalLinkButton.h"
 #include "SWidgets/SProgressBar.h"
+#include "SWidgets/SNamedRow.h"
 
 DECLARE_DELEGATE(FOnBuildAndPushFinished);
 

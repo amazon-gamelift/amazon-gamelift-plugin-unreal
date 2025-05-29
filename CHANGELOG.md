@@ -1,5 +1,26 @@
 CHANGELOG
 
+# 3.0.0 (5/29/2025)
+- In the Editor's plugin window for Managed EC2:
+  - The game client path field now allows spaces.
+  - The server build path field now allows spaces.
+  - A new text field lets you add command-line arguments for use when launching the client from the Editor.
+- Supports ARM game server builds for UE5.
+- Fixes MSVC 5130 Macro Warnings.
+- Merges the two Unreal plugins (lightweight and standalone) into one repository.
+- Removes the need to manually download and build the server SDK. The new plugin version now includes the server SDK source code, which is automatically built along with the Unreal project using the Unreal Build Tool.
+  - CMake is no longer a prerequisite.
+- Removes the need to install OpenSSL. The new plugin uses OpenSSL source in the Unreal Engine with static linking.
+  - When packaging a build for Amazon GameLift Servers, you no longer need to include the libcrypto and libssl files into your game server build.
+- Integrates the Unreal cross-compiling toolkit that enables cross-compiled builds on native Windows and Linux. Removes the need for special steps, including the Amazon GameLift Servers toolkit to generate Linux libraries.
+- Adds the missing Destroy() action.
+- Adds or improves client-side validation in all server SDK actions.
+- Adds more specific and improved error responses to API errors.
+- Fixes an edge case in GetFleetRoleCredentials() that causes game server crash.
+- Adds default logic to the onProcessTerminate() callback that terminates the game server process when this callback is invoked.
+- Adds idempotency token support to allow InitSDK() retries to succeed.
+- Includes autoBackfillMode in the data passed in the OnUpdateGameSession() callback.
+
 # 2.0.1 (1/9/2025)
 
 - Fixed an issue with initializing containers status.

@@ -5,8 +5,17 @@ if (!$LastExitCode -eq 0) {
   echo "Docker login has failed."
   exit $LastExitCode
 }
-echo "Running docker build -t {{REPO_NAME}}:{{IMAGE_TAG}} {{IMAGE_PATH}}"
-docker build -t {{REPO_NAME}}:{{IMAGE_TAG}} "{{IMAGE_PATH}}" --progress=plain --build-arg GAME_BUILD_DIRECTORY={{GAME_BUILD_DIRECTORY}} --build-arg GAME_EXECUTABLE={{GAME_EXECUTABLE}}
+
+echo "Running docker ps"
+docker ps
+if (!$LastExitCode -eq 0) {
+  echo "Docker ps has failed. Please start Docker Desktop and try again."
+  exit $LastExitCode
+}
+
+$docker_build_cmd = 'docker build -t {{REPO_NAME}}:{{IMAGE_TAG}} "{{IMAGE_PATH}}" --progress=plain --build-arg GAME_BUILD_DIRECTORY="{{GAME_BUILD_DIRECTORY}}" --build-arg GAME_EXECUTABLE="{{GAME_EXECUTABLE}}"'
+echo "Running: $docker_build_cmd"
+Invoke-Expression $docker_build_cmd
 if (!$LastExitCode -eq 0) {
   echo "Docker build has failed."
   exit $LastExitCode

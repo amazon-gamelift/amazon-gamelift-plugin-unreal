@@ -39,6 +39,8 @@ public:
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText GameClientFilePath;
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
+	FText GameClientLauncherArguments;
+	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FDateTime LastUpdated;
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText CognitoClientId;

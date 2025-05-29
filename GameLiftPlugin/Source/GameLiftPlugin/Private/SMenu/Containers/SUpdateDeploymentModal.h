@@ -4,9 +4,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IGameLiftContainersHandler.h"
+#include "Widgets/Input/SCheckBox.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/SCompoundWidget.h"
 #include "GameLiftPluginConstants.h"
+#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
+#include "Types/EContainersDeploymentScenario.h"
+#include "SWidgets/SPathInput.h"
+#include "SWidgets/SNamedRow.h"
+#include "SWidgets/SSetupMessage.h"
+#include "SWidgets/SSelectionComboBox.h"
 
 class SWindow;
 class SUserInputSection;
