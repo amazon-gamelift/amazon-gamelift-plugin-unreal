@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "SWidgets/SSectionStep.h"
+#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
 
 class SEditableTextBox;
 class STextBlock;

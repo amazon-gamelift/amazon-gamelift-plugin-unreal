@@ -7,17 +7,20 @@
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/SCompoundWidget.h"
 #include "GameLiftPluginConstants.h"
+#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
 
 class SWindow;
 class SPathInput;
 
-DECLARE_DELEGATE_OneParam(FStartClient, FString);
+DECLARE_DELEGATE_TwoParams(FStartClient, FString, FString);
 
 class SClientBuildModal : public SCompoundWidget
 {
     SLATE_BEGIN_ARGS(SClientBuildModal) {}
 
     SLATE_ARGUMENT(FString, DefaultClientBuildExecutablePath)
+
+    SLATE_ARGUMENT(FString, DefaultClientBuildLauncherArguments)
 
     SLATE_ARGUMENT(TWeakPtr<SWidget>, ParentWidget)
 
@@ -37,14 +40,17 @@ private:
     void OnBootstrapStatusChanged(const SGameLiftSettingsAwsAccountMenu*);
     void OnGameClientExecutablePathInputUpdated(const FString& NewPath);
     TSharedRef<SWidget> CreateGameClientPathInput();
+    TSharedRef<SWidget> CreateGameClientLauncherArgumentsInput();
 
 private:
     TSharedPtr<SPathInput> GameClientExecutablePathInput;
+    TSharedPtr<SEditableTextBox> GameClientLauncherArgumentsInput;
     TSharedPtr<SWindow> OwnerWindow;
     TWeakPtr<SWidget> ParentWidget;
     TSharedPtr<SButton> StartClient;
     FString ClientBuildExecutablePathToUpdate;
     FString ClientBuildExecutablePath;
+    FString ClientBuildLauncherArguments;
     FStartClient OnStartClientClickedDelegate;
     const int ModalWindowWidth = 600;
 };

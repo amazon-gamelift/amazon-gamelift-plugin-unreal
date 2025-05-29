@@ -10,6 +10,7 @@
 
 #include "SWidgets/SNamedRow.h"
 #include "SWidgets/STextStatus.h"
+#include "Settings/UGameLiftSettings.h"
 
 #include "GameLiftPluginStyle.h"
 
@@ -74,7 +75,7 @@ void SBootstrapStatus::Construct(const FArguments& InArgs)
 	TSharedRef<SWidget> ActiveWidget = Internal::MakeActiveStatusWidget();
 	TSharedRef<SWidget> FailureWidget = Internal::MakeFailureStatusWidget();
 
-	UGameLiftSettings* Settings = GetMutableDefault<UGameLiftSettings>();
+	UGameLiftSettings* GameLiftSettings = GetMutableDefault<UGameLiftSettings>();
 	BootstrapState = EBootstrapMessageState::NoBootstrappedMessage;
 
 	ChildSlot

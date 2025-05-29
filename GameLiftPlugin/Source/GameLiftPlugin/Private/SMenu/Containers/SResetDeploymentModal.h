@@ -7,6 +7,7 @@
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/SCompoundWidget.h"
 #include "GameLiftPluginConstants.h"
+#include "SWidgets/SSetupMessage.h"
 
 class SWindow;
 class SUserInputSection;

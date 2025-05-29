@@ -7,7 +7,9 @@
 #include <SWidgets/SSectionsWithHeaders.h>
 #include <SWidgets/SExpandableSection.h>
 #include "Widgets/Layout/SExpandableArea.h"
+#include "Widgets/Layout/SWidgetSwitcher.h"
 #include "SMenu/SCommonMenuSections.h"
+#include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
 
 #include "SCreateContainerImageSection.h"
 #include "SSetupECRRepositorySection.h"
@@ -22,8 +24,10 @@
 #include "SUpdateDeploymentModal.h"
 
 #include "Settings/UGameLiftContainersStatus.h"
+#include "Settings/UGameLiftSettings.h"
 #include <GameLiftPluginConstants.h>
 #include <GameLiftPluginStyle.h>
+#include <GameLiftPlugin.h>
 #include <Types/EContainersDeploymentScenario.h>
 
 #include "Utils/Misc.h"
@@ -208,19 +212,22 @@ TSharedRef<SLaunchBar> SGameLiftDeployContainersMenu::CreateLaunchBar()
 {
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
     FString GameClientPath = ContainersStatus->GameClientExecutablePath;
+    FString GameClientLauncherArgs = ContainersStatus->GameClientLauncherArguments;
 
     return SAssignNew(LaunchBar, SLaunchBar)
         .MenuType(EMenuType::Containers)
         .ParentWidget(this->AsWeak())
         .IsEnabled_Raw(this, &SGameLiftDeployContainersMenu::IsLaunchBarActive)
         .DefaultClientBuildExecutablePath(GameClientPath)
+        .DefaultClientBuildLauncherArguments(GameClientLauncherArgs)
         .OnStartClientButtonClicked(FStartClient::CreateRaw(this, &SGameLiftDeployContainersMenu::OnLaunchClientButtonClicked));
 }
 
-void SGameLiftDeployContainersMenu::OnLaunchClientButtonClicked(FString GameClientPath)
+void SGameLiftDeployContainersMenu::OnLaunchClientButtonClicked(FString GameClientPath, FString LauncherArgs)
 {
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
     ContainersStatus->GameClientExecutablePath = GameClientPath;
+    ContainersStatus->GameClientLauncherArguments = LauncherArgs;
     ContainersStatus->SaveConfig();
 
     if (LaunchBar.IsValid())
@@ -230,13 +237,10 @@ void SGameLiftDeployContainersMenu::OnLaunchClientButtonClicked(FString GameClie
 
     IsLaunchingGameClient = true;
 
-    TArray<FString> Args;
-    FString RunPath = Utils::Splitters::ExtractPathArgs(FText::FromString(ContainersStatus->GameClientExecutablePath), Args);
-
-    Async(EAsyncExecution::Thread, [this, RunPath = MoveTemp(RunPath), Args = MoveTemp(Args), GameClientPath]()
+    Async(EAsyncExecution::Thread, [this, GameClientPath, LauncherArgs]()
         {
             auto runner = IGameLiftCoreModule::Get().MakeRunner();
-            bool bIsLaunched = runner->LaunchProcess(RunPath, Args);
+            bool bIsLaunched = runner->LaunchProcess(GameClientPath, { LauncherArgs });
 
             IsLaunchingGameClient = false;
 
@@ -391,8 +395,8 @@ TSharedRef<SWidget> SGameLiftDeployContainersMenu::CreateAWSCredentialsProfileSe
 
 bool SGameLiftDeployContainersMenu::IsContainerSupportedRegion() const
 {
-    UGameLiftSettings* Settings = GetMutableDefault<UGameLiftSettings>();
-    FString AwsRegion = Settings->AwsRegion.ToString();
+    UGameLiftSettings* GameLiftSettings = GetMutableDefault<UGameLiftSettings>();
+    FString AwsRegion = GameLiftSettings->AwsRegion.ToString();
 
     Aws::ERegions Region = Aws::RegionFromString(AwsRegion);
 

@@ -7,6 +7,7 @@
 #include <DetailLayoutBuilder.h>
 #include <Widgets/SBoxPanel.h>
 #include <Widgets/Layout/SWidgetSwitcher.h>
+#include <Widgets/Text/SRichTextBlock.h>
 
 #include "IAWSConfigFileProfile.h"
 #include "IGameLiftCoreModule.h"
@@ -27,6 +28,7 @@
 #include "SWidgets/STitleBlock.h"
 #include "SWidgets/STextStatus.h"
 #include "SWidgets/SExternalLinkButton.h"
+#include "SWidgets/SSectionsWithHeaders.h"
 #include "SMenu/SBootstrapModal.h"
 
 #include "Settings/FGameLiftSettingsCustomization.h"

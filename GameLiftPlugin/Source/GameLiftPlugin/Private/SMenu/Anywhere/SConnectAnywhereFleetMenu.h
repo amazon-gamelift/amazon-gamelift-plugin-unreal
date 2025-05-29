@@ -7,11 +7,11 @@
 #include "IGameLiftAnywhereHandler.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "SWidgets/SSectionStep.h"
+#include "SWidgets/SNamedRow.h"
 #include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
 
 #include "Types/FTextIntPair.h"
 
-class SNamedRow;
 class SBootstrapStatus;
 class SEditableTextBox;
 class SErrorBanner;

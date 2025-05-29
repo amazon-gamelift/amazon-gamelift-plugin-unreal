@@ -128,7 +128,7 @@ namespace GameLift
         unsigned int createAndSetGameServerHash(const std::string& gameServerName, const std::string& gameServerHash) const;
         unsigned int createAndSetGameServerAddonsHash(const std::string& gameServerName, const std::string& gameServerAddonsHash) const;
         unsigned int createAndSetParamHash(const std::string& paramName, const std::string& paramHash) const;
-
+        static std::string createSanitizedResourceName(const std::string& originalName);
         std::string getShortRegionCode();
 
     public:
@@ -323,10 +323,11 @@ namespace GameLift
 
         inline std::string GetGameServerHashParamName(const std::string& gameServerName) const
         {
+            const std::string sanitizedGameServerName = createSanitizedResourceName(gameServerName);
             return std::string(GAMELIFT_GAME_SERVER_HASH_PREFIX)
                 .append(GetFeatureTypeString(m_featureType))
                 .append("_")
-                .append(gameServerName)
+                .append(sanitizedGameServerName)
                 .append("_")
                 .append(m_accountInfo.gameName)
                 .append("_")
@@ -335,10 +336,11 @@ namespace GameLift
 
         inline std::string GetGameServerAddonsHashParamName(const std::string& gameServerName) const
         {
+            const std::string sanitizedGameServerName = createSanitizedResourceName(gameServerName);
             return std::string(GAMELIFT_GAME_SERVER_ADDONS_PREFIX)
                 .append(GetFeatureTypeString(m_featureType))
                 .append("_")
-                .append(gameServerName)
+                .append(sanitizedGameServerName)
                 .append("_")
                 .append(m_accountInfo.gameName)
                 .append("_")

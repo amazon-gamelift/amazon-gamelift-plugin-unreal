@@ -108,12 +108,14 @@ TSharedRef<SLaunchBar> SGameLiftDeployAnywhereMenu::CreateLaunchBar()
 {
 	UGameLiftAnywhereStatus* AnywhereStatus = GetMutableDefault<UGameLiftAnywhereStatus>();
 	FString GameClientPath = AnywhereStatus->PathToClientBuild;
+	FString GameClientLauncherArguments = AnywhereStatus->ClientBuildLauncherArguments;
 
 	return SAssignNew(LaunchBar, SLaunchBar)
 		.MenuType(EMenuType::Anywhere)
 		.ParentWidget(this->AsWeak())
 		.IsEnabled_Raw(this, &SGameLiftDeployAnywhereMenu::CanLaunchServer)
 		.DefaultClientBuildExecutablePath(GameClientPath)
+		.DefaultClientBuildLauncherArguments(GameClientLauncherArguments)
 		.IsStartServerButtonEnabled_Raw(this, &SGameLiftDeployAnywhereMenu::CanLaunchServer)
 		.IsStartClientButtonEnabled_Raw(this, &SGameLiftDeployAnywhereMenu::CanLaunchClient)
 		.OnStartClientButtonClicked(FStartClient::CreateRaw(this, &SGameLiftDeployAnywhereMenu::OnLaunchClientButtonClicked))
@@ -221,30 +223,31 @@ void SGameLiftDeployAnywhereMenu::OnLaunchServerButtonClicked()
 		});
 }
 
-void SGameLiftDeployAnywhereMenu::OnLaunchClientButtonClicked(FString GameClientPath)
+void SGameLiftDeployAnywhereMenu::OnLaunchClientButtonClicked(FString GameClientPath, FString LauncherArgs)
 {
 	UGameLiftAnywhereStatus* AnywhereStatus = GetMutableDefault<UGameLiftAnywhereStatus>();
 	AnywhereStatus->PathToClientBuild = GameClientPath;
+	AnywhereStatus->ClientBuildLauncherArguments = LauncherArgs;
 	AnywhereStatus->SaveConfig();
 
 	IsLaunchingGameClient = true;
 	UpdateLaunchClientButtonState();
 
-	Async(EAsyncExecution::Thread, [this, GameClientPath]
+	Async(EAsyncExecution::Thread, [this, GameClientPath, LauncherArgs]
 		{
 			UGameLiftAnywhereStatus* AnywhereStatus = GetMutableDefault<UGameLiftAnywhereStatus>();
 			UGameLiftSettings* Settings = GetMutableDefault<UGameLiftSettings>();
 
-			TArray<FString> LaunchParameters;
-			LaunchParameters.Add(Menu::DeployAnywhere::kGameClientLaunchParameterWindowMode);
+			TArray<FString> Args{ LauncherArgs };
+			Args.Add(Menu::DeployAnywhere::kGameClientLaunchParameterWindowMode);
 
 			// Pass credential profile name to the client build so the client can set it to call Amazon GameLift APIs.
-			LaunchParameters.Add(FString::Format(Menu::DeployAnywhere::kGameClientLaunchParameterCredentialsName, { *Settings->CurrentProfileName }));
-			LaunchParameters.Add(FString::Format(Menu::DeployAnywhere::kGameClientLaunchParameterFleetId, { *AnywhereStatus->FleetId }));
-			LaunchParameters.Add(FString::Format(Menu::DeployAnywhere::kGameClientLaunchParameterCustomLocation, { *AnywhereStatus->CustomLocation }));
+			Args.Add(FString::Format(Menu::DeployAnywhere::kGameClientLaunchParameterCredentialsName, { *Settings->CurrentProfileName }));
+			Args.Add(FString::Format(Menu::DeployAnywhere::kGameClientLaunchParameterFleetId, { *AnywhereStatus->FleetId }));
+			Args.Add(FString::Format(Menu::DeployAnywhere::kGameClientLaunchParameterCustomLocation, { *AnywhereStatus->CustomLocation }));
 
 			auto Runner = IGameLiftCoreModule::Get().MakeRunner();
-			bool bIsLaunched = Runner->LaunchProcess(AnywhereStatus->PathToClientBuild, LaunchParameters);
+			bool bIsLaunched = Runner->LaunchProcess(AnywhereStatus->PathToClientBuild, Args);
 
 			IsLaunchingGameClient = false;
 

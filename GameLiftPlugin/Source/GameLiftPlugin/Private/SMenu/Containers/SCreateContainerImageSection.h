@@ -7,6 +7,7 @@
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/SCompoundWidget.h"
 #include "SWidgets/SProgressBar.h"
+#include "SWidgets/SNamedRow.h"
 
 DECLARE_DELEGATE(FOnContainersImageUpdate);
 
