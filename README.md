@@ -17,10 +17,10 @@
 This repository contains the C++ server SDK plugin for Unreal Engine integration. It includes two variants of the plugin:
 
 - `Amazon GameLift Servers SDK for Unreal Engine` includes the server SDK only. Use this plugin to add the server SDK to your game projects
-and customize your integration. For more details, see the README file in the `GameLiftServerSDK` folder of this repository.
+and customize your integration. For more details, [see the README file](./GameLiftServerSDK) in the `GameLiftServerSDK` folder of this repository.
 - `Amazon GameLift Servers Plugin for Unreal Engine` includes the server SDK and additional UI components for the Unreal Editor. The UI components
 give you guided workflows so you can deploy your game for hosting with Amazon GameLift Servers directly from the Editor.
-For more details, see the README file in the `GameLiftPlugin` folder of this repository.
+For more details, [see the README file](./GameLiftPlugin) in the `GameLiftPlugin` folder of this repository.
 
 Download the plugin variant that best fits your project requirements from the Releases page of this repository.
 
