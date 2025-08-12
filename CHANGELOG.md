@@ -1,5 +1,9 @@
 CHANGELOG
 
+# 3.0.1 (8/12/2025)
+- Support the Unreal Plugin and Server SDK on Unreal Engine 5.6
+- Fix compilation errors when packaging Android client targets.
+
 # 3.0.0 (5/29/2025)
 - In the Editor's plugin window for Managed EC2:
   - The game client path field now allows spaces.

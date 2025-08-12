@@ -404,6 +404,8 @@ namespace GameLift
             m_lambdaClient = lambdaClient;
         }
 
+        const std::string GetUnrealPackagedBuildVersion(const std::string& executablePath) const;
+
         static std::string GetGameServerBucketPath(const std::string& gameName, const std::string& gameServerPath);
         static std::string GetGameServerZipName(const std::string& gameServerPath, const std::string& gameServerHash);
     };

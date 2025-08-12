@@ -1,6 +1,6 @@
 # Amazon GameLift Servers SDK for Unreal Engine
 
-The Amazon GameLift Servers SDK for Unreal Engine is compatible with UE5 versions (5.0, 5.1, 5.2, 5.3, 5.4, 5.5), and supports development and packaging of game servers for Windows or Linux, as well as game clients for any Unreal-supported platform.
+The Amazon GameLift Servers SDK for Unreal Engine is compatible with UE5 versions (5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6), and supports development and packaging of game servers for Windows or Linux, as well as game clients for any Unreal-supported platform.
 The SDK supports both x64 and ARM architectures, with ARM architecture being supported starting from Unreal Engine version 5.0 and above.
 
 ## Install the SDK for Unreal Engine

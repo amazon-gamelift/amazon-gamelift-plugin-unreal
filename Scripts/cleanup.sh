@@ -14,12 +14,3 @@ rm -rf "$SCRIPT_BASE_PATH/GameLiftServerSDK/Source/GameLiftServerSDK/Private/aws
 [ -d "$SCRIPT_BASE_PATH/GameLiftPlugin/Source/GameLiftServer/ThirdParty" ] && find "$SCRIPT_BASE_PATH/GameLiftPlugin/Source/GameLiftServer/ThirdParty" -mindepth 1 ! -name '.gitkeep' -exec rm -rf {} + || true
 [ -d "$SCRIPT_BASE_PATH/GameLiftPlugin/Source/GameLiftServer" ] && find "$SCRIPT_BASE_PATH/GameLiftPlugin/Source/GameLiftServer" -mindepth 1 -type d ! -name 'ThirdParty' -exec rm -rf {} + || true
 [ -d "$SCRIPT_BASE_PATH/GameLiftPlugin/Source/GameLiftServer" ] && find "$SCRIPT_BASE_PATH/GameLiftPlugin/Source/GameLiftServer" -maxdepth 1 -type f -exec rm -f {} + || true
-
-
-
-
-
-
-
-
-

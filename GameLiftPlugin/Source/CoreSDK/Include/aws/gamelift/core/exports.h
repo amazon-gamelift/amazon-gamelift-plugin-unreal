@@ -723,6 +723,14 @@ extern "C"
     GAMELIFT_API unsigned int GameLiftResourcesSaveFunctionInstances(GAMELIFT_FEATURERESOURCES_INSTANCE_HANDLE resourceInstance);
 
     /**
+     * @brief Get the file version of the packaged build executable.
+     *
+     * @param resourceInstance Pointer to a GameLiftFeatureResources instance created with GameLiftResourcesInstanceCreate().
+     * @return The string containing the file version information of executable.
+     */
+    GAMELIFT_API const char* GameLiftResourcesGetUnrealPackagedBuildVersion(GAMELIFT_FEATURERESOURCES_INSTANCE_HANDLE resourceInstance, const std::string& executablePath);
+
+    /**
      * @brief Upload this feature's instance Lambda layers to the S3 bootstrap bucket.
      *
      * @param resourceInstance Pointer to a GameLiftFeatureResources instance created with GameLiftResourcesInstanceCreate().
