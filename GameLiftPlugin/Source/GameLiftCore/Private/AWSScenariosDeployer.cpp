@@ -3,7 +3,8 @@
 
 #include "AWSScenariosDeployer.h"
 
-#include <Misc/FileHelper.h>
+#include "Misc/FileHelper.h"
+#include "Misc/EngineVersionComparison.h"
 
 #include "aws/gamelift/core/exports.h"
 #include "aws/gamelift/core/errors.h"
@@ -180,6 +181,55 @@ void AWSScenariosDeployer::SetLastApiGatewayEndpoint(const FString& ApiGateway)
 	LastApiGatewayEndpoint = ApiGateway;
 }
 
+/**
+ * Returns the Unreal Engine version used to package the game server build
+ *
+ * @param AwsAccountInstance	Pointer to AwsAccountInstance to call APIs
+ * @param BuildFilePath			Path to the packaged game server executable
+ * @return PackagedVersion		Unreal Engine version used to package the game server build
+ */
+UnrealVersion::Version GetUnrealPackagedBuildVersion(IAWSAccountInstance* AwsAccountInstance, const FString& BuildFilePath)
+{
+	AwsDeployerInternal::ResourcesInstanceGuard ResourcesInstance(AwsAccountInstance);
+
+	std::string ExecutablePath = Convertors::FSToStdS(BuildFilePath);
+	FString PackagedVersionString = Convertors::ASToFS(GameLiftResourcesGetUnrealPackagedBuildVersion(ResourcesInstance.Get(), ExecutablePath));
+
+	UnrealVersion::Version PackagedVersion = UnrealVersionUtils::ParseVersionString(PackagedVersionString);
+
+	if (PackagedVersion == UnrealVersion::INVALID_VERSION) {
+		// We failed to determine version, proceed with deployment without copying dependencies
+		UE_LOG(GameLiftCoreLog, Log, TEXT("Failed to determine version from %s"), *BuildFilePath);
+	}
+	else {
+		UE_LOG(GameLiftCoreLog, Log, TEXT("Detected game server build packaged with Unreal Version %s from game server executable path %s"),
+			*UnrealVersionUtils::GetVersionString(PackagedVersion), *BuildFilePath);
+	}
+
+	return PackagedVersion;
+}
+
+/**
+ * Sets extra server resources path for older Unreal Engine versions if needed
+ * For UE versions older than 5.6.0, we need to copy additional dependencies
+ *
+ * @param ExtraServerResources	Path Path to the extra resources that may need to be copied
+ * @param Params				Deployment parameters to be updated with extra resources path if needed
+ * @return True if extra server resources path was set
+ */
+bool SetExtraServerResourcesPath(UnrealVersion::Version PackagedVersion, const FString& ExtraServerResourcesPath, AwsScenarios::ManagedEC2InstanceTemplateParams& Params)
+{
+	// UE5.6.0 does not require extra dependencies
+	if (PackagedVersion < UnrealVersion::UE5_6_0) {
+		UE_LOG(GameLiftCoreLog, Log, TEXT("Required dependencies will automatically be copied from %s since game server packaged version is < 5.6.0"),
+			*ExtraServerResourcesPath);
+		Params.ExtraServerResourcesPath = Convertors::FSToStdS(ExtraServerResourcesPath);
+		return true;
+	}
+
+	return false;
+}
+
 bool AWSScenariosDeployer::DeployManagedEC2Scenario(
 	const FText& Scenario,
 	IAWSAccountInstance* AwsAccountInstance,
@@ -203,7 +253,9 @@ bool AWSScenariosDeployer::DeployManagedEC2Scenario(
 
 	Params.GameNameParameter = Convertors::FSToStdS(GameName);
 	Params.BuildFolderPath = Convertors::FSToStdS(BuildFolderPath);
-	Params.ExtraServerResourcesPath = Convertors::FSToStdS(ExtraServerResourcesPath);
+
+	UnrealVersion::Version PackagedVersion = GetUnrealPackagedBuildVersion(AwsAccountInstance, BuildFilePath);
+	SetExtraServerResourcesPath(PackagedVersion, ExtraServerResourcesPath, Params);
 
 	Params.BuildOperatingSystemParameter = Convertors::FSToStdS(BuildOperatingSystem);
 	Params.LaunchPathParameter = stdLaunchPathParameter;
@@ -397,7 +449,7 @@ bool AWSScenariosDeployer::DeployScenarioImpl(
 	Params.BuildS3BucketParameter = StdBootstrapBucketName;
 	Params.LambdaZipS3BucketParameter = StdBootstrapBucketName;
 	Params.LambdaZipS3KeyParameter = AwsScenarios::GetLambdaS3Key(Params.GameNameParameter, MainFunctionsReplacementId);
-	Params.UnrealEngineVersionParameter = Convertors::FSToStdS(UnrealVersion::GetCurrentEngineVersion());
+	Params.UnrealEngineVersionParameter = Convertors::FSToStdS(UnrealVersionUtils::GetCurrentEngineVersion());
 
 	if (ShouldDeployBeAborted(AwsScenario->SaveFeatureInstanceTemplate(AwsAccountInstance, Params.ToMap()),
 		Deploy::Logs::kSaveFeatureInstanceTemplatesFailed))
