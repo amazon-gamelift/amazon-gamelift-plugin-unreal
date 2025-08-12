@@ -15,12 +15,14 @@ namespace GameLift
     private:
         void* m_zipFile;
         std::string m_sourcePath;
+        FuncLogCallback m_logCb = nullptr;
+        std::set<std::string> m_addedFiles;  // Keep track of files we've added
 
         void SetSourcePath(const std::string& sourcePath);
         const std::string& GetSourcePath() const;
 
     public:
-        Zipper(const std::string& sourcePath, const std::string& zipFileName);
+        Zipper(const std::string& sourcePath, const std::string& zipFileName, FuncLogCallback logCb);
         ~Zipper();
 
         bool AddDirectoryToZipFile(const std::string& directoryPath);

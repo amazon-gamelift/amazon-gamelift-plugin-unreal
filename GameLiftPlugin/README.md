@@ -1,5 +1,5 @@
 # Amazon GameLift Servers Plugin for Unreal Engine
-Amazon GameLift Servers Plugin for Unreal Engine is compatible with Unreal Engine 5 (versions 5.0, 5.1, 5.2, 5.3, 5.4, and 5.5).  Use the plugin to develop and package game servers for Windows or Linux, and game clients for any Unreal-supported platform.
+Amazon GameLift Servers Plugin for Unreal Engine is compatible with Unreal Engine 5 (versions 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, and 5.6).  Use the plugin to develop and package game servers for Windows or Linux, and game clients for any Unreal-supported platform.
 
 ## Overview
 [Amazon GameLift Servers](https://aws.amazon.com/gamelift/servers/) is a fully managed service that gives game developers the ability to manage and scale dedicated game servers for session-based multiplayer games. The **Amazon GameLift Servers Plugin for Unreal Engine** streamlines the process of setting up an Unreal game project for hosting on Amazon GameLift Servers.

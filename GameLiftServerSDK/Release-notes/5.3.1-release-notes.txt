@@ -1,0 +1,2 @@
+- Support the Unreal Plugin and Server SDK on Unreal Engine 5.6
+- Fix compilation errors when packaging Android client targets.

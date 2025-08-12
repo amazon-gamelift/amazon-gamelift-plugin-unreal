@@ -23,6 +23,9 @@ public class GameLiftServerSDK : ModuleRules
         bEnableExceptions = true;
         bUseRTTI = true;
 
+        // Disable windows min/max macros
+        PublicDefinitions.Add("NOMINMAX");
+
         if (Target.Type == TargetRules.TargetType.Server)
         {
             PublicDefinitions.Add("WITH_GAMELIFT=1");
@@ -46,6 +49,14 @@ public class GameLiftServerSDK : ModuleRules
         {
             PublicDefinitions.Add("_WEBSOCKETPP_CPP11_STRICT_=1");
             PublicDefinitions.Add("SPDLOG_WCHAR_TO_UTF8_SUPPORT=1");
+            PublicDefinitions.AddRange(new string[] {
+                "_WIN32_WINNT_WIN10_TH2=0x0A00",
+                "_WIN32_WINNT_WIN10_RS1=0x0A00",
+                "_WIN32_WINNT_WIN10_RS2=0x0A00",
+                "_WIN32_WINNT_WIN10_RS3=0x0A00",
+                "_WIN32_WINNT_WIN10_RS4=0x0A00",
+                "_WIN32_WINNT_WIN10_RS5=0x0A00",
+            });
         }
         else if (Target.Platform == UnrealTargetPlatform.Linux || Target.Platform == UnrealTargetPlatform.LinuxArm64)
         {

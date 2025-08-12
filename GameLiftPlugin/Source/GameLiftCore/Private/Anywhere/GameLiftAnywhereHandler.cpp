@@ -101,7 +101,7 @@ GameLiftAnywhereCreateFleetResult GameLiftAnywhereHandler::CreateFleet(const FSt
 	check(AccountInstance);
 	check(AccountInstance->GetInstance());
 
-	FString CurrentVersion = UnrealVersion::GetCurrentEngineVersion();
+	FString CurrentVersion = UnrealVersionUtils::GetCurrentEngineVersion();
 	FString FleetDescriptionWithVersion = FString::Format(TEXT("{0} Using Unreal Engine Version {1}"), { Anywhere::kAnywhereFleetDescription, CurrentVersion });
 
 	std::string StdFleetName = Convertors::FSToStdS(InFleetName);
