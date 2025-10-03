@@ -34,22 +34,26 @@ public class GameLiftServerSDK : ModuleRules
         {
             PublicDefinitions.Add("WITH_GAMELIFT=0");
         }
+	
+        // Isolate asio namespace to improve packaging compatibility with other modules
+        PrivateDefinitions.Add("asio=gamelift_asio");
+        PrivateDefinitions.Add("asio_signal_handler=gamelift_asio_signal_handler");
 
-        PublicDefinitions.Add("AWS_GAMELIFT_EXPORTS");
-        PublicDefinitions.Add("ASIO_STANDALONE=1");
+        PrivateDefinitions.Add("AWS_GAMELIFT_EXPORTS");
+        PrivateDefinitions.Add("ASIO_STANDALONE=1");
 
-        #if UE_5_5_OR_LATER
-            // Enabling std::invoke_result allows more platforms to compile, such as Linux ARM,
-            //    but may not run in earlier versions Unreal using C++ versions < C++17
-            PublicDefinitions.Add("ASIO_HAS_STD_INVOKE_RESULT=1");
-        #endif
+        // std::invoke_result replaces std::result_of for C++17 and later
+        // Asio only auto-detects this for MSVC, so override for all compilers
+        if (Target.CppStandard >= CppStandardVersion.Cpp17) {
+            PrivateDefinitions.Add("ASIO_HAS_STD_INVOKE_RESULT");
+        }
 
-        PublicDefinitions.Add("USE_IMPORT_EXPORT=1");
+        PrivateDefinitions.Add("USE_IMPORT_EXPORT=1");
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
-            PublicDefinitions.Add("_WEBSOCKETPP_CPP11_STRICT_=1");
-            PublicDefinitions.Add("SPDLOG_WCHAR_TO_UTF8_SUPPORT=1");
-            PublicDefinitions.AddRange(new string[] {
+            PrivateDefinitions.Add("_WEBSOCKETPP_CPP11_STRICT_=1");
+            PrivateDefinitions.Add("SPDLOG_WCHAR_TO_UTF8_SUPPORT=1");
+            PrivateDefinitions.AddRange(new string[] {
                 "_WIN32_WINNT_WIN10_TH2=0x0A00",
                 "_WIN32_WINNT_WIN10_RS1=0x0A00",
                 "_WIN32_WINNT_WIN10_RS2=0x0A00",
@@ -60,22 +64,20 @@ public class GameLiftServerSDK : ModuleRules
         }
         else if (Target.Platform == UnrealTargetPlatform.Linux || Target.Platform == UnrealTargetPlatform.LinuxArm64)
         {
-            PublicDefinitions.Add("ASIO_DISABLE_CO_AWAIT");
-            PublicDefinitions.Add("RAPIDJSON_NOMEMBERITERATORCLASS");
+            PrivateDefinitions.Add("ASIO_DISABLE_CO_AWAIT");
+            PrivateDefinitions.Add("RAPIDJSON_NOMEMBERITERATORCLASS");
         }
 
         string SpdlogPath = Path.Combine(ModuleDirectory, "../../ThirdParty/spdlog/include");
         string SpdlogSrcPath = Path.Combine(ModuleDirectory, "../../ThirdParty/spdlog/src");
         string RapidJSONPath = Path.Combine(ModuleDirectory, "../../ThirdParty/rapidjson/include");
         string AsioPath = Path.Combine(ModuleDirectory, "../../ThirdParty/asio/include");
-        string AsioSrcPath = Path.Combine(ModuleDirectory, "../../ThirdParty/asio/src");
         string WebSocketPPPath = Path.Combine(ModuleDirectory, "../../ThirdParty/websocketpp");
 
-        PublicIncludePaths.Add(SpdlogPath);
+        PrivateIncludePaths.Add(SpdlogPath);
         PrivateIncludePaths.Add(SpdlogSrcPath);
-        PublicIncludePaths.Add(RapidJSONPath);
-        PublicIncludePaths.Add(AsioPath);
-        PrivateIncludePaths.Add(AsioSrcPath);
-        PublicIncludePaths.Add(WebSocketPPPath);
+        PrivateIncludePaths.Add(RapidJSONPath);
+        PrivateIncludePaths.Add(AsioPath);
+        PrivateIncludePaths.Add(WebSocketPPPath);
     }
 }

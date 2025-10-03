@@ -1,5 +1,8 @@
 CHANGELOG
 
+# 3.0.2 (10/3/2025)
+- Isolate the Asio namespace in the ServerSDK module to improve packaging compatibility with other modules
+
 # 3.0.1 (8/12/2025)
 - Support the Unreal Plugin and Server SDK on Unreal Engine 5.6
 - Fix compilation errors when packaging Android client targets.
