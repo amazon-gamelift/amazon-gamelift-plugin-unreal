@@ -35,6 +35,7 @@ namespace AwsScenarios
 		std::string LambdaZipS3KeyParameter;
 		std::string LaunchPathParameter;
 		std::string UnrealEngineVersionParameter;
+		std::string EnableMetricsParameter;
 
 		virtual ~BaseInstanceTemplateParams() = default;
 
@@ -58,10 +59,12 @@ namespace AwsScenarios
 			const FString* InAccountId = InMap.Find("AccountId");
 			const FString* InLaunchPathParameter = InMap.Find("LaunchPathParameter");
 			const FString* InUnrealEngineVersionParameter = InMap.Find("UnrealEngineVersionParameter");
+			const FString* InEnableMetricsParameter = InMap.Find("EnableMetricsParameter");
 
 			if (InGameNameParameter && InBuildOperatingSystemParameter && InBuildS3BucketParameter
 				&& InLambdaZipS3BucketParameter && InLambdaZipS3KeyParameter && InApiGatewayStageNameParameter
-				&& InApiGatewayStageNameParameter && InAccountId && InLaunchPathParameter && InUnrealEngineVersionParameter)
+				&& InApiGatewayStageNameParameter && InAccountId && InLaunchPathParameter && InUnrealEngineVersionParameter
+				&& InEnableMetricsParameter)
 			{
 				GameNameParameter = Convertors::FSToStdS(*InGameNameParameter);
 				BuildOperatingSystemParameter = Convertors::FSToStdS(*InBuildOperatingSystemParameter);
@@ -72,6 +75,7 @@ namespace AwsScenarios
 				AccountId = Convertors::FSToStdS(*InAccountId);
 				LaunchPathParameter = Convertors::FSToStdS(*InLaunchPathParameter);
 				UnrealEngineVersionParameter = Convertors::FSToStdS(*InUnrealEngineVersionParameter);
+				EnableMetricsParameter = Convertors::FSToStdS(*InEnableMetricsParameter);
 			}
 		}
 
@@ -88,6 +92,7 @@ namespace AwsScenarios
 			ParamsMap.Emplace("AccountId", AccountId.c_str());
 			ParamsMap.Emplace("LaunchPathParameter", LaunchPathParameter.c_str());
 			ParamsMap.Emplace("UnrealEngineVersionParameter", UnrealEngineVersionParameter.c_str());
+			ParamsMap.Emplace("EnableMetricsParameter", EnableMetricsParameter.c_str());
 
 			return ParamsMap;
 		}
@@ -121,12 +126,13 @@ namespace AwsScenarios
 			const FString* InTotalVcpuLimitParameter = InMap.Find("TotalVcpuLimitParameter");
 			const FString* InTotalMemoryLimitParameter = InMap.Find("TotalMemoryLimitParameter");
 			const FString* InUnrealEngineVersionParameter = InMap.Find("UnrealEngineVersionParameter");
-
+			const FString* InEnableMetricsParameter = InMap.Find("EnableMetricsParameter");
+			
 			if (InAccountId && InApiGatewayStageNameParameter && InContainerGroupDefinitionNameParameter
 				&& InContainerImageNameParameter && InContainerImageUriParameter && InGameNameParameter
 				&& InLambdaZipS3BucketParameter && InLambdaZipS3KeyParameter && InLaunchPathParameter 
 				&& InFleetUdpFromPortParameter && InFleetUdpToPortParameter && InTotalVcpuLimitParameter
-				&& InTotalMemoryLimitParameter && InUnrealEngineVersionParameter)
+				&& InTotalMemoryLimitParameter && InUnrealEngineVersionParameter && InEnableMetricsParameter)
 			{
 				AccountId = Convertors::FSToStdS(*InAccountId);
 				ApiGatewayStageNameParameter = Convertors::FSToStdS(*InApiGatewayStageNameParameter);
@@ -142,6 +148,7 @@ namespace AwsScenarios
 				TotalVcpuLimitParameter = Convertors::FSToStdS(*InTotalVcpuLimitParameter);
 				TotalMemoryLimitParameter = Convertors::FSToStdS(*InTotalMemoryLimitParameter);
 				UnrealEngineVersionParameter = Convertors::FSToStdS(*InUnrealEngineVersionParameter);
+				EnableMetricsParameter = Convertors::FSToStdS(*InEnableMetricsParameter);
 			}
 		}
 
@@ -163,6 +170,7 @@ namespace AwsScenarios
 			ParamsMap.Emplace("TotalVcpuLimitParameter", TotalVcpuLimitParameter.c_str());
 			ParamsMap.Emplace("TotalMemoryLimitParameter", TotalMemoryLimitParameter.c_str());
 			ParamsMap.Emplace("UnrealEngineVersionParameter", UnrealEngineVersionParameter.c_str());
+			ParamsMap.Emplace("EnableMetricsParameter", EnableMetricsParameter.c_str());
 			return ParamsMap;
 		}
 	};

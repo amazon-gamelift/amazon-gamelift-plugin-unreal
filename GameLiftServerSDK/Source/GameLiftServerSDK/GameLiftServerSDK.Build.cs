@@ -41,6 +41,7 @@ public class GameLiftServerSDK : ModuleRules
 
         PrivateDefinitions.Add("AWS_GAMELIFT_EXPORTS");
         PrivateDefinitions.Add("ASIO_STANDALONE=1");
+        PublicDefinitions.Add("SPDLOG_NO_EXCEPTIONS");
 
         // std::invoke_result replaces std::result_of for C++17 and later
         // Asio only auto-detects this for MSVC, so override for all compilers
@@ -73,11 +74,13 @@ public class GameLiftServerSDK : ModuleRules
         string RapidJSONPath = Path.Combine(ModuleDirectory, "../../ThirdParty/rapidjson/include");
         string AsioPath = Path.Combine(ModuleDirectory, "../../ThirdParty/asio/include");
         string WebSocketPPPath = Path.Combine(ModuleDirectory, "../../ThirdParty/websocketpp");
+        string ConcurrentQueuePath = Path.Combine(ModuleDirectory, "../../ThirdParty/concurrentqueue");
 
-        PrivateIncludePaths.Add(SpdlogPath);
-        PrivateIncludePaths.Add(SpdlogSrcPath);
+        PublicIncludePaths.Add(SpdlogPath);
+        PublicIncludePaths.Add(SpdlogSrcPath);
         PrivateIncludePaths.Add(RapidJSONPath);
         PrivateIncludePaths.Add(AsioPath);
         PrivateIncludePaths.Add(WebSocketPPPath);
+        PrivateIncludePaths.Add(ConcurrentQueuePath);
     }
 }

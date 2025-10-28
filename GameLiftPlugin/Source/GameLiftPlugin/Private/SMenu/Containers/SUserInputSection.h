@@ -8,9 +8,11 @@
 #include "Widgets/SCompoundWidget.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
 #include "Widgets/Input/SEditableTextBox.h"
+#include "Widgets/Input/SCheckBox.h"
 #include "SWidgets/SNamedRow.h"
 #include "SWidgets/SPathInput.h"
 #include "SWidgets/SSelectionComboBox.h"
+#include "SWidgets/SSetupMessage.h"
 #include "Types/EContainersDeploymentScenario.h"
 #include "SIntakeQuestionnaireSection.h"
 #include "SMenu/SGameLiftSettingsAwsAccountMenu.h"
@@ -25,6 +27,8 @@ public:
     void Construct(const FArguments& InArgs);
 
 private:
+    TSharedRef<SWidget> CreateMetricsInfoMessage();
+    TSharedRef<SWidget> CreateMetricsCheckBox();
     TSharedRef<SWidget> CreateGameServerPathInput();
     TSharedRef<SWidget> CreateOutConfigFilePathInput();
     TSharedRef<SWidget> CreateExistingECRRepoDropdown();
@@ -66,6 +70,7 @@ private:
     void OnTotalVCPULimitInputCommitted(const FText& NewInput, ETextCommit::Type InCommitInfo);
     void OnImageTagInputCommitted(const FText& NewInput, ETextCommit::Type InCommitInfo);
     void OnECRRepoInputCommitted(const FText& NewInput, ETextCommit::Type InCommitInfo);
+    void OnEnableMetricsChanged(ECheckBoxState NewState);
 
     void UpdateInitialUI();
     EVisibility ShowGameServerPathInput();
@@ -99,6 +104,8 @@ private:
     TSharedPtr<SEditableTextBox> TotalVCPULimitInput;
     TSharedPtr<SEditableTextBox> ImageTagInput;
     TSharedPtr<SEditableTextBox> ECRRepoInput;
+    TSharedPtr<SCheckBox> EnableMetricsCheckBox;
+    TSharedPtr<SSetupMessage> MetricsInfoMessage;
     const int OverridePrimaryColumnWidth = 200;
     const int OverrideSecondaryColumnWidth = 100;
 };

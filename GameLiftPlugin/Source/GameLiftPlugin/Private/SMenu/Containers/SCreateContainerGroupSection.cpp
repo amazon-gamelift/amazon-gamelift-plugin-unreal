@@ -526,7 +526,8 @@ FReply SCreateContainerGroupSection::DeployCloudFormation()
 				ContainersStatus->OutConfigFilePath.ToString(),
 				ContainersStatus->ConnectionPortRange,
 				ContainersStatus->TotalVCPULimit.ToString(),
-				ContainersStatus->TotalMemoryLimit.ToString()
+				ContainersStatus->TotalMemoryLimit.ToString(),
+				ContainersStatus->EnableMetrics
 			);
 			if (IsDeployed)
 			{

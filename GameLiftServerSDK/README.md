@@ -78,6 +78,10 @@ After you add the server SDK to your game project, see these Amazon GameLift Ser
   * [Build a container image for Amazon GameLift Servers](https://docs.aws.amazon.com/gamelift/latest/developerguide/containers-prepare-images.html)
   * [Create an Amazon GameLift Servers managed container fleet](https://docs.aws.amazon.com/gamelift/latest/developerguide/containers-build-fleet.html)
 
+## Metrics
+
+This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../METRICS.md).
+
 ## Troubleshoot plugin installation
 
 #### Issue: When rebuilding the game project’s solution file after adding the plugin, I get some compile errors.
@@ -85,4 +89,32 @@ After you add the server SDK to your game project, see these Amazon GameLift Ser
 **Resolution:** Add the following line to your `<ProjectName>Editor.Target.cs` file to disable adaptive unity build, which may cause conflicts:
 ```
     bUseAdaptiveUnityBuild = false;
+```
+
+## Metrics
+
+The Amazon GameLift Servers SDK for Unreal Engine provides a comprehensive metrics system for collecting and sending custom metrics from your game servers to Amazon GameLift. These metrics can be integrated with various visualization and aggregation tools including Amazon Managed Grafana, Prometheus, Amazon CloudWatch, and other monitoring platforms.
+
+See below for a simple usage guide and see [CUSTOM_METRICS.md](../CUSTOM_METRICS.md) for a detailed API description.
+
+## Quick Start
+
+### Initialize the GameLift Metrics SDK
+
+1. Include GameLiftMetrics.h at the top of your game mode source. `#include "GameLiftMetrics.h"`
+2. Initialize the GameLift Metrics SDK
+
+```c
+    FGameLiftGenericOutcome InitSdkOutcome = GameLiftSdkModule->InitSDK(ServerParametersForAnywhere);
+    // Initialize the GameLift metrics SDK
+    FGameLiftMetricsModule::Load().Initialize();
+
+    if (InitSdkOutcome.IsSuccess())
+    {
+        UE_LOG(GameServerLog, SetColor, TEXT("%s"), COLOR_GREEN);
+        UE_LOG(GameServerLog, Log, TEXT("GameLift InitSDK succeeded!"));
+        UE_LOG(GameServerLog, SetColor, TEXT("%s"), COLOR_NONE);
+    }
+    else
+    ...
 ```

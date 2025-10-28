@@ -29,3 +29,5 @@ FleetUdpToPortParameter:
   value: "{{AWSGAMELIFT::VARS::FleetUdpToPortParameter}}"
 UnrealEngineVersionParameter:
   value: "{{AWSGAMELIFT::VARS::UnrealEngineVersionParameter}}"
+EnableMetricsParameter:
+  value: "{{AWSGAMELIFT::VARS::EnableMetricsParameter}}"

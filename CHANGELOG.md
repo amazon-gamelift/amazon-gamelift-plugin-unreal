@@ -1,5 +1,8 @@
 CHANGELOG
 
+# 3.1.0 (10/28/2025)
+- Adds support for publishing built-in and custom telemetry metrics, with pre-built dashboards for visualizing usage data.
+
 # 3.0.2 (10/3/2025)
 - Isolate the Asio namespace in the ServerSDK module to improve packaging compatibility with other modules
 

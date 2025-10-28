@@ -27,6 +27,12 @@ $dependencies = @(
         Url = "https://github.com/zaphoyd/websocketpp/archive/refs/tags/0.8.2.zip"
         TargetFolder = "websocketpp"
         DependencyRootCopyFrom = "websocketpp-0.8.2"
+    },
+    [PSCustomObject]@{
+        Name = "concurrentqueue"
+        Url = "https://github.com/cameron314/concurrentqueue/archive/refs/tags/v1.0.4.zip"
+        TargetFolder = "concurrentqueue"
+        DependencyRootCopyFrom = "concurrentqueue-1.0.4"
     }
 )
 

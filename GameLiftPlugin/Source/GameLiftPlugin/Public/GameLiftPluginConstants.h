@@ -264,6 +264,10 @@ namespace Menu
 		static const auto kOutConfigFilePathTooltip = NSLOCTEXT("SDeployCommon", "ConfigFilePath_ToolTip", "Amazon GameLift generates these files to store your hosting configuration based on the information you provide.");
 		static const auto kOutConfigFilePathHint = NSLOCTEXT("SDeployCommon", "ConfigFilePath_Hint", "Path to client configuration output path");
 
+		static const auto kEnableMetricsTitle = NSLOCTEXT("SDeployCommon", "EnableMetrics", "Enable telemetry metrics");
+		static const auto kEnableMetricsTooltip = NSLOCTEXT("SDeployCommon", "EnableMetricsTooltip", "This automatically creates a fleet role with write access to Prometheus and CloudWatch, and enables shared credentials file generation on Managed EC2 fleets.");
+		static const auto kEnableMetricsInfoText = NSLOCTEXT("SDeployCommon", "EnableMetricsInfo", "Telemetry metrics provide detailed data for your game servers using the OpenTelemetry (OTEL) collector. This helps monitor performance, resource usage and custom application metrics. Unless you are eligible to select AWS Free Tier benefits, charges are incurred to your AWS account based upon the scenario you select.\n\nThis checkbox only handles AWS permissions. Follow METRICS.md in the plugin repository for complete setup instructions to enable telemetry metrics.");
+
 		static const auto kGameClientPathTitle = NSLOCTEXT("SDeployCommon", "GameClientTitle", "Client build executable");
 		static const auto kGameClientPathHint = NSLOCTEXT("SDeployCommon", "GameClientPathHint", "Path to client build executable");
 		static const auto kGameClientPathTooltip = NSLOCTEXT("SDeployCommon", "GameClientPathTooltip", "Specify path to client build executable");

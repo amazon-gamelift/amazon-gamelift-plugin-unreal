@@ -26,7 +26,7 @@ BuildVersionParameter:
 BuildOperatingSystemParameter:
   value: "{{AWSGAMELIFT::VARS::BuildOperatingSystemParameter}}"
 BuildServerSdkVersionParameter:
-  value: "5.3.0"
+  value: "5.4.0"
 FleetTcpFromPortParameter:
   value: "7770"
 FleetTcpToPortParameter:
@@ -39,4 +39,6 @@ FleetNameParameter:
   value: "FlexMatch Fleet"
 UnrealEngineVersionParameter:
   value: "{{AWSGAMELIFT::VARS::UnrealEngineVersionParameter}}"
+EnableMetricsParameter:
+  value: "{{AWSGAMELIFT::VARS::EnableMetricsParameter}}"
 

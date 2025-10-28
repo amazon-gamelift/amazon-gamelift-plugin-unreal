@@ -127,6 +127,9 @@ public:
     virtual FGameLiftGenericOutcome InitSDK();
     virtual FGameLiftGenericOutcome InitSDK(const FServerParameters &serverParameters);
 
+    virtual FGameLiftGenericOutcome InitMetrics();
+    virtual FGameLiftGenericOutcome InitMetrics(const FMetricsParameters &metricsParameters);
+
     //virtual TGameLiftGenericOutcome ProcessReady(Aws::GameLift::Server::ProcessParameters &processParameters);
     virtual FGameLiftGenericOutcome ProcessReady(FProcessParameters &processParameters);
 

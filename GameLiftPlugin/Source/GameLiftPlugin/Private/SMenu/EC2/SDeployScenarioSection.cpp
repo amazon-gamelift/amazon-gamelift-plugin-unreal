@@ -260,7 +260,8 @@ FReply SDeployScenarioSection::DeployCloudFormation()
 				DeploySettings->BuildFolderPath.ToString(),
 				DeploySettings->BuildFilePath.ToString(),
 				DeploySettings->OutConfigFilePath.ToString(),
-				DeploySettings->ExtraServerResourcesPath.ToString()
+				DeploySettings->ExtraServerResourcesPath.ToString(),
+				DeploySettings->EnableMetrics
 			);
 
 			if (IsDeployed)
