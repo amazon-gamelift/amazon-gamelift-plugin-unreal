@@ -4,13 +4,14 @@
 
 SCRIPT_BASE_PATH=$(pwd)
 
-DEPENDENCY_NAMES=("spdlog" "rapidjson" "asio-asio" "websocketpp")
+DEPENDENCY_NAMES=("spdlog" "rapidjson" "asio-asio" "websocketpp" "concurrentqueue")
 DEPENDENCY_URLS=("https://github.com/gabime/spdlog/archive/refs/tags/v1.14.0.zip" 
                  "https://github.com/Tencent/rapidjson/archive/refs/tags/v1.1.0.zip"
                  "https://github.com/chriskohlhoff/asio/archive/refs/tags/asio-1-20-0.zip"
-                 "https://github.com/zaphoyd/websocketpp/archive/refs/tags/0.8.2.zip")
-DEPENDENCY_TARGET_FOLDERS=("spdlog" "rapidjson" "asio" "websocketpp")
-DEPENDENCY_ROOT_COPY_FROM=("spdlog-1.14.0" "rapidjson-1.1.0" "asio-asio-1-20-0/asio" "websocketpp-0.8.2")
+                 "https://github.com/zaphoyd/websocketpp/archive/refs/tags/0.8.2.zip"
+                 "https://github.com/cameron314/concurrentqueue/archive/refs/tags/v1.0.4.zip")
+DEPENDENCY_TARGET_FOLDERS=("spdlog" "rapidjson" "asio" "websocketpp" "concurrentqueue")
+DEPENDENCY_ROOT_COPY_FROM=("spdlog-1.14.0" "rapidjson-1.1.0" "asio-asio-1-20-0/asio" "websocketpp-0.8.2" "concurrentqueue-1.0.4")
 
 TEMP_DIR="$SCRIPT_BASE_PATH/Temp"
 DOWNLOAD_DIR="$TEMP_DIR/downloads"

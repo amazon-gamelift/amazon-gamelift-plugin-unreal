@@ -6,6 +6,8 @@
 #include "CoreMinimal.h"
 #include "SWidgets/SDeploymentFields.h"
 #include "SWidgets/SSectionStep.h"
+#include "SWidgets/SSetupMessage.h"
+#include "Widgets/Input/SCheckBox.h"
 
 class SGameParametersSection : public SSectionStep
 {
@@ -19,6 +21,8 @@ public:
 	void Construct(const FArguments& InArgs);
 
 private:
+	TSharedRef<SWidget> CreateMetricsInfoMessage();
+    TSharedRef<SWidget> CreateMetricsCheckBox();
 	TSharedRef<SWidget> CreateSubmissionButton();
 	TSharedRef<SWidget> CreateModifyButton();
 	FReply OnSubmissionButtonClicked();
@@ -28,10 +32,13 @@ private:
 	bool AreDeploySettingsComplete();
 	void CompleteSection();
 	void StartSection() override;
+	void OnEnableMetricsChanged(ECheckBoxState NewState);
 
 private:
 	TSharedPtr<SWidget> DeploymentFields;
 	TSharedPtr<SWidgetSwitcher> SectionSwitcher;
 	TSharedPtr<SButton> SubmissionButton;
 	TSharedPtr<SButton> ModifyButton;
+	TSharedPtr<SCheckBox> EnableMetricsCheckBox;
+	TSharedPtr<SSetupMessage> MetricsInfoMessage;
 };

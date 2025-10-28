@@ -93,6 +93,9 @@ See these Amazon GameLift Servers documentation topics for help with plugin feat
 * [Deploy your game with a managed EC2 fleet](https://docs.aws.amazon.com/gamelift/latest/developerguide/unreal-plugin-ec2.html)
 * [Deploy your game with a managed container fleet](https://docs.aws.amazon.com/gamelift/latest/developerguide/unreal-plugin-container.html)
 
+## Metrics
+
+This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../TelemetryMetrics/METRICS.md).
 
 ## Troubleshoot plugin installation
 

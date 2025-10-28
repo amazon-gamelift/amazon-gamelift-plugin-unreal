@@ -27,7 +27,8 @@ namespace AwsScenarios
 				"AccountId",
 				"LaunchPathParameter",
 				"BuildS3KeyParameter",
-				"UnrealEngineVersionParameter"
+				"UnrealEngineVersionParameter",
+				"EnableMetricsParameter"
 			};
 			return paramNames;
 		}
@@ -48,7 +49,8 @@ namespace AwsScenarios
 				TemplateParams.AccountId.c_str(),
 				TemplateParams.LaunchPathParameter.c_str(),
 				BuildS3Path.c_str(),
-				TemplateParams.UnrealEngineVersionParameter.c_str()
+				TemplateParams.UnrealEngineVersionParameter.c_str(),
+				TemplateParams.EnableMetricsParameter.c_str()
 			};
 
 			auto* ParamNames = GetParamNames();

@@ -25,6 +25,8 @@ public:
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText Scenario;
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
+	bool EnableMetrics;
+	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText BuildName;
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText BuildOperatingSystem;
