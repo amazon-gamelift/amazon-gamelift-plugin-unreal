@@ -96,6 +96,16 @@ struct GAMELIFTSERVERSDK_API FServerParameters
     FString m_sessionToken;
 };
 
+struct GAMELIFTSERVERSDK_API FMetricsParameters
+{
+    FString m_statsDHost;
+    int32 m_statsDPort = 0;
+    FString m_crashReporterHost;
+    int32 m_crashReporterPort = 0;
+    int32 m_flushIntervalMs = 0;
+    int32 m_maxPacketSize = 0;
+};
+
 struct GAMELIFTSERVERSDK_API FGameLiftPlayerSession
 {	
     FString m_playerSessionId;

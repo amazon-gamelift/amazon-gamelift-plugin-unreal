@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 5,
-	"VersionName": "5.3.2",
+	"VersionName": "5.4.0",
 	"FriendlyName": "GameLiftServerSDK",
 	"Description": "",
 	"Category": "Other",
@@ -17,6 +17,14 @@
 	"Modules": [
 		{
 			"Name": "GameLiftServerSDK",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"TargetAllowList": [
+				"Server"
+			]
+		},
+		{
+			"Name": "GameLiftMetrics",
 			"Type": "Runtime",
 			"LoadingPhase": "PreDefault",
 			"TargetAllowList": [

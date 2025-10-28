@@ -32,7 +32,8 @@ namespace AwsScenarios
 				"FleetUdpToPortParameter",
 				"TotalVcpuLimitParameter",
 				"TotalMemoryLimitParameter",
-				"UnrealEngineVersionParameter"
+				"UnrealEngineVersionParameter",
+				"EnableMetricsParameter"
 			};
 			return paramNames;
 		}
@@ -58,7 +59,8 @@ namespace AwsScenarios
 				TemplateParams.FleetUdpToPortParameter.c_str(),
 				TemplateParams.TotalVcpuLimitParameter.c_str(),
 				TemplateParams.TotalMemoryLimitParameter.c_str(),
-				TemplateParams.UnrealEngineVersionParameter.c_str()
+				TemplateParams.UnrealEngineVersionParameter.c_str(),
+				TemplateParams.EnableMetricsParameter.c_str()
 			};
 
 			auto* ParamNames = GetParamNames();

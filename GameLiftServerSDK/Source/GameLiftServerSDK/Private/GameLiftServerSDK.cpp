@@ -109,6 +109,43 @@ FGameLiftGenericOutcome FGameLiftServerSDKModule::InitSDK(const FServerParameter
 #endif
 }
 
+FGameLiftGenericOutcome FGameLiftServerSDKModule::InitMetrics() {
+#if WITH_GAMELIFT
+    auto initMetricsOutcome = Aws::GameLift::Server::InitMetrics();
+    if (initMetricsOutcome.IsSuccess()) {
+        return FGameLiftGenericOutcome(nullptr);
+    }
+    else {
+        return FGameLiftGenericOutcome(FGameLiftError(initMetricsOutcome.GetError()));
+    }
+#else
+    return FGameLiftGenericOutcome(nullptr);
+#endif
+}
+
+FGameLiftGenericOutcome FGameLiftServerSDKModule::InitMetrics(const FMetricsParameters &metricsParameters) {
+#if WITH_GAMELIFT
+    Aws::GameLift::Server::MetricsParameters sdkMetricsParameters(
+        TCHAR_TO_UTF8(*metricsParameters.m_statsDHost),
+        metricsParameters.m_statsDPort,
+        TCHAR_TO_UTF8(*metricsParameters.m_crashReporterHost),
+        metricsParameters.m_crashReporterPort,
+        metricsParameters.m_flushIntervalMs,
+        metricsParameters.m_maxPacketSize
+    );
+
+    auto initMetricsOutcome = Aws::GameLift::Server::InitMetrics(sdkMetricsParameters);
+    if (initMetricsOutcome.IsSuccess()) {
+        return FGameLiftGenericOutcome(nullptr);
+    }
+    else {
+        return FGameLiftGenericOutcome(FGameLiftError(initMetricsOutcome.GetError()));
+    }
+#else
+    return FGameLiftGenericOutcome(nullptr);
+#endif
+}
+
 FGameLiftGenericOutcome FGameLiftServerSDKModule::ProcessEnding() {
 #if WITH_GAMELIFT
     auto outcome = Aws::GameLift::Server::ProcessEnding();

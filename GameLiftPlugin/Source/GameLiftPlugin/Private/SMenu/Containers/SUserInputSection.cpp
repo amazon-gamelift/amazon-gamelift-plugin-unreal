@@ -25,6 +25,18 @@ void SUserInputSection::Construct(const FArguments& InArgs)
         .AutoHeight()
         .Padding(SPadding::Bottom2x)
         [
+            CreateMetricsInfoMessage()
+        ];
+
+    VerticalBox->AddSlot()
+        .AutoHeight()
+        .Padding(SPadding::Top_Bottom)
+        [
+            CreateMetricsCheckBox()
+        ];
+
+    VerticalBox->AddSlot()
+        [
             SNew(SBox)
                 .Visibility_Lambda([this]()
                     {
@@ -122,6 +134,34 @@ void SUserInputSection::Construct(const FArguments& InArgs)
     SResetDeploymentModal::OnResetDeploymentMultiDelegate.AddSP(this, &SUserInputSection::OnRefreshUI);
 
     UpdateInitialUI();
+}
+
+TSharedRef<SWidget> SUserInputSection::CreateMetricsInfoMessage()
+{
+    MetricsInfoMessage = SNew(SSetupMessage)
+        .InfoText(Menu::DeployCommon::kEnableMetricsInfoText)
+        .InfoButtonStyle(Style::Button::kCloseButtonStyleName)
+        .OnButtonClicked_Lambda([this]()
+            {
+                MetricsInfoMessage->SetVisibility(EVisibility::Collapsed);
+            })
+        .SetState(ESetupMessageState::InfoMessage);
+    
+        return MetricsInfoMessage.ToSharedRef();
+}
+
+TSharedRef<SWidget> SUserInputSection::CreateMetricsCheckBox()
+{
+    UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
+    EnableMetricsCheckBox = SNew(SCheckBox)
+        .IsChecked(ContainersStatus->EnableMetrics ? ECheckBoxState::Checked : ECheckBoxState::Unchecked)
+        .OnCheckStateChanged_Raw(this, &SUserInputSection::OnEnableMetricsChanged);
+    
+    return SNew(SNamedRow)
+        .NameText(Menu::DeployCommon::kEnableMetricsTitle)
+        .NameTooltipText(Menu::DeployCommon::kEnableMetricsTooltip)
+        .PrimaryColumnWidthOverride(OverridePrimaryColumnWidth)
+        .RowWidget(EnableMetricsCheckBox.ToSharedRef());
 }
 
 TSharedRef<SWidget> SUserInputSection::CreateGameServerPathInput()
@@ -852,6 +892,13 @@ void SUserInputSection::OnECRRepoInputCommitted(const FText& NewInput, ETextComm
     }
 }
 
+void SUserInputSection::OnEnableMetricsChanged(ECheckBoxState NewState)
+{
+    UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
+    ContainersStatus->EnableMetrics = (NewState == ECheckBoxState::Checked);
+    ContainersStatus->SaveConfig();
+}
+
 void SUserInputSection::UpdateInitialUI()
 {
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
@@ -864,6 +911,7 @@ void SUserInputSection::UpdateInitialUI()
     TotalMemoryLimitInput->SetText(ContainersStatus->TotalMemoryLimit);
     ImageTagInput->SetText(ContainersStatus->ImageTag);
     ECRRepoInput->SetText(FText::FromString(ContainersStatus->ECRRepoName));
+    EnableMetricsCheckBox->SetIsChecked(ContainersStatus->EnableMetrics ? ECheckBoxState::Checked : ECheckBoxState::Unchecked);
 
     ErrorRow->SetVisibility(EVisibility::Collapsed);
     ErrorTextBlock->SetText(FText::GetEmpty());

@@ -1,0 +1,2 @@
+- Adds support for publishing built-in and custom telemetry metrics, with pre-built dashboards for visualizing usage data.
+- Fixes a potential null pointer exception in the client logging when attempting to re-establish the WebSocket connection.

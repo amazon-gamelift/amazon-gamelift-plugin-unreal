@@ -8,6 +8,7 @@
 #include "SWidgets/SOnlineHyperlink.h"
 #include "SWidgets/STextSeparator.h"
 #include "SWidgets/SDeploymentFields.h"
+#include "SWidgets/SNamedRow.h"
 #include "Widgets/Layout/SWidgetSwitcher.h"
 
 #include "Types/EManagedEC2DeploymentScenario.h"
@@ -35,6 +36,18 @@ void SGameParametersSection::Construct(const FArguments& InArgs)
 			SNew(SVerticalBox)
 				+ SVerticalBox::Slot()
 				.AutoHeight()
+				.Padding(SPadding::Top_Bottom)
+				[
+					CreateMetricsInfoMessage()
+				]
+				+ SVerticalBox::Slot()
+				.AutoHeight()
+				.Padding(SPadding::Top_Bottom)
+				[
+					CreateMetricsCheckBox()
+				]
+				+ SVerticalBox::Slot()
+				.AutoHeight()
 				[
 					DeploymentFields.ToSharedRef()
 				]
@@ -57,6 +70,35 @@ void SGameParametersSection::Construct(const FArguments& InArgs)
 
 	SDeployScenarioSection::OnEC2DeploymentProgressChangedMultiDelegate.AddSP(this, &SGameParametersSection::UpdateUIBasedOnCurrentState);
 	UpdateUIBasedOnCurrentState();
+}
+
+TSharedRef<SWidget> SGameParametersSection::CreateMetricsInfoMessage()
+{
+	MetricsInfoMessage = SNew(SSetupMessage)
+		.InfoText(Menu::DeployCommon::kEnableMetricsInfoText)
+		.InfoButtonStyle(Style::Button::kCloseButtonStyleName)
+		.OnButtonClicked_Lambda([this]()
+			{
+				MetricsInfoMessage->SetVisibility(EVisibility::Collapsed);
+			})
+		.SetState(ESetupMessageState::InfoMessage);
+	
+	return MetricsInfoMessage.ToSharedRef();
+
+}
+
+TSharedRef<SWidget> SGameParametersSection::CreateMetricsCheckBox()
+{
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	EnableMetricsCheckBox = SNew(SCheckBox)
+		.IsChecked(DeploySettings->EnableMetrics ? ECheckBoxState::Checked : ECheckBoxState::Unchecked)
+		.OnCheckStateChanged_Raw(this, &SGameParametersSection::OnEnableMetricsChanged);
+	
+	return SNew(SNamedRow)
+		.NameText(Menu::DeployCommon::kEnableMetricsTitle)
+		.NameTooltipText(Menu::DeployCommon::kEnableMetricsTooltip)
+		.RowWidget(EnableMetricsCheckBox.ToSharedRef());
+	
 }
 
 TSharedRef<SWidget> SGameParametersSection::CreateSubmissionButton()
@@ -106,6 +148,13 @@ FReply SGameParametersSection::OnModifyButtonClicked()
 	return FReply::Handled();
 }
 
+void SGameParametersSection::OnEnableMetricsChanged(ECheckBoxState NewState)
+{
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	DeploySettings->EnableMetrics = (NewState == ECheckBoxState::Checked);
+	DeploySettings->SaveConfig();
+}
+
 void SGameParametersSection::UpdateUIBasedOnCurrentState()
 {
 	// TODO: Add state for each section completion
@@ -128,6 +177,7 @@ void SGameParametersSection::CompleteSection()
 {
 	auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
 	DeploymentInfo->SetAllFieldsReadOnly(true);
+	EnableMetricsCheckBox->SetEnabled(false);
 	SectionSwitcher->SetActiveWidgetIndex((int32)ESectionUIState::Complete);
 	SetProgressBarState(SProgressBar::EProgressBarUIState::ProgressComplete);
 }
@@ -136,6 +186,7 @@ void SGameParametersSection::StartSection()
 {
 	auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
 	DeploymentInfo->SetAllFieldsReadOnly(false);
+	EnableMetricsCheckBox->SetEnabled(true);
 	SectionSwitcher->SetActiveWidgetIndex((int32)ESectionUIState::InComplete);
 }
 

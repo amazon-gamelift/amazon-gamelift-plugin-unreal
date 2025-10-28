@@ -238,7 +238,8 @@ bool AWSScenariosDeployer::DeployManagedEC2Scenario(
 	const FString& BuildFolderPath,
 	const FString& BuildFilePath,
 	const FString& OutConfigFilePath,
-	const FString& ExtraServerResourcesPath
+	const FString& ExtraServerResourcesPath,
+	bool EnableMetrics
 )
 {
 	UE_LOG(GameLiftCoreLog, Log, TEXT("%s %s"), Deploy::Logs::kRunAwsScenario, *Scenario.ToString());
@@ -259,6 +260,7 @@ bool AWSScenariosDeployer::DeployManagedEC2Scenario(
 
 	Params.BuildOperatingSystemParameter = Convertors::FSToStdS(BuildOperatingSystem);
 	Params.LaunchPathParameter = stdLaunchPathParameter;
+	Params.EnableMetricsParameter = EnableMetrics  ? "true" : "false";
 
 	return DeployScenarioImpl(AwsAccountInstance, AwsScenario, Params, OutConfigFilePath);
 }
@@ -297,7 +299,7 @@ bool AWSScenariosDeployer::DeployContainerScenario(
 	const FText& Scenario, IAWSAccountInstance* AwsAccountInstance, const FString& ContainerGroupDefinitionName,
 	const FString& ContainerImageName, const FString& ContainerImageUri, const FString& IntraContainerLaunchPath,
 	const FString& GameName, const FString& OutConfigFilePath, const FText& ConnectionPortRange, const FString& TotalVcpuLimit,
-	const FString& TotalMemoryLimit)
+	const FString& TotalMemoryLimit, bool EnableMetrics)
 {
 	AwsScenarios::IAWSScenario* AwsScenario = AwsDeployerInternal::GetAwsScenarioByName(
 		Scenario,
@@ -319,6 +321,7 @@ bool AWSScenariosDeployer::DeployContainerScenario(
 	Params.FleetUdpToPortParameter = Convertors::FSToStdS(FleetUdpToPort);
 	Params.TotalVcpuLimitParameter = Convertors::FSToStdS(TotalVcpuLimit);
 	Params.TotalMemoryLimitParameter = Convertors::FSToStdS(TotalMemoryLimit);
+	Params.EnableMetricsParameter = EnableMetrics  ? "true" : "false";
 
 	return DeployScenarioImpl(AwsAccountInstance, AwsScenario, Params, OutConfigFilePath);
 }
