@@ -80,7 +80,7 @@ After you add the server SDK to your game project, see these Amazon GameLift Ser
 
 ## Metrics
 
-This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../METRICS.md).
+This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../TelemetryMetrics/METRICS.md).
 
 ## Troubleshoot plugin installation
 
@@ -95,7 +95,7 @@ This telemetry metrics solution enables the feature to collect and ship telemetr
 
 The Amazon GameLift Servers SDK for Unreal Engine provides a comprehensive metrics system for collecting and sending custom metrics from your game servers to Amazon GameLift. These metrics can be integrated with various visualization and aggregation tools including Amazon Managed Grafana, Prometheus, Amazon CloudWatch, and other monitoring platforms.
 
-See below for a simple usage guide and see [CUSTOM_METRICS.md](../CUSTOM_METRICS.md) for a detailed API description.
+See below for a simple usage guide and see [CUSTOM_METRICS.md](../TelemetryMetrics/CUSTOM_METRICS.md) for a detailed API description.
 
 ## Quick Start
 
