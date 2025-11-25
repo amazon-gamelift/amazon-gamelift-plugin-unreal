@@ -24,10 +24,14 @@ For more details, [see the README file](./GameLiftPlugin) in the `GameLiftPlugin
 
 Download the plugin variant that best fits your project requirements from the Releases page of this repository.
 
+Telemetry metrics collection is supported by both plugins for comprehensive observability of your game servers. Use pre-built
+Amazon Managed Grafana dashboards to monitor game server performance. For setup instructions, [see the Telemetry Metrics Guide](./TelemetryMetrics/METRICS.md).
+
 ## Additional Resources
 
 * [About Amazon GameLift Servers](http://aws.amazon.com/gamelift/servers)
 * [Amazon GameLift Servers plugin guide](https://docs.aws.amazon.com/gamelift/latest/developerguide/unreal-plugin.html)
+* [Telemetry Metrics Setup Guide](./TelemetryMetrics/METRICS.md)
 * [AWS Game Tech forum](https://repost.aws/topics/TAo6ggvxz6QQizjo9YIMD35A/game-tech/c/amazon-gamelift)
 * [AWS for Games blog](https://aws.amazon.com/blogs/gametech/)
 * [Amazon GameLift Servers toolkit](https://github.com/amazon-gamelift/amazon-gamelift-toolkit)

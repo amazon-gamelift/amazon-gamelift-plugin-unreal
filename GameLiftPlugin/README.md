@@ -97,6 +97,8 @@ See these Amazon GameLift Servers documentation topics for help with plugin feat
 
 This telemetry metrics solution enables the feature to collect and ship telemetry metrics from your game servers hosted on Amazon GameLift Servers to AWS services for monitoring and observability. For detailed setup and usage instructions, see [METRICS.md](../TelemetryMetrics/METRICS.md).
 
+![Telemetry Metrics on Amazon Grafana Dashboard](../TelemetryMetrics/telemetry_metrics.png)
+
 ## Troubleshoot plugin installation
 
 #### Issue: When rebuilding the game project’s solution file after adding the plugin, I get some compile errors.
