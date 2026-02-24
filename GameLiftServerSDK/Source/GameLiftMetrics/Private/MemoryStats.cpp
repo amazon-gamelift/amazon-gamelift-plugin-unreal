@@ -12,6 +12,14 @@
 
 #include "MemoryStats.h"
 
+// Windows headers define GetObject as a macro (GetObjectW) which conflicts with
+// Unreal's FUObjectItem::GetObject() method. Undefine it after includes.
+#ifdef _WIN32
+#ifdef GetObject
+#undef GetObject
+#endif
+#endif
+
 #include "Engine.h"
 #include "EngineStats.h"
 

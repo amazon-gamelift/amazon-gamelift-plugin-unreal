@@ -8,6 +8,7 @@
 enum class EFleetOperatingSystem : int
 {
 	Windows2016,
+	Windows2022,
 	AmazonLinux2,
 	AmazonLinux2023
 };
@@ -16,6 +17,7 @@ inline TArray<EFleetOperatingSystem> MakeSupportedOperatingSystemList()
 {
 	TArray<EFleetOperatingSystem> OSList;
 	OSList.Add(EFleetOperatingSystem::Windows2016);
+	OSList.Add(EFleetOperatingSystem::Windows2022);
 	OSList.Add(EFleetOperatingSystem::AmazonLinux2);
 	OSList.Add(EFleetOperatingSystem::AmazonLinux2023);
 	return OSList;
@@ -27,6 +29,8 @@ inline FText EFleetOperatingSystemToName(EFleetOperatingSystem OSType)
 	{
 		case EFleetOperatingSystem::Windows2016:
 			return Menu::DeployManagedEC2::kWindowsServer2016Name;
+		case EFleetOperatingSystem::Windows2022:
+			return Menu::DeployManagedEC2::kWindowsServer2022Name;
 		case EFleetOperatingSystem::AmazonLinux2:
 			return Menu::DeployManagedEC2::kAmazonLinux2Name;
 		case EFleetOperatingSystem::AmazonLinux2023:
@@ -42,6 +46,8 @@ inline FText EFleetOperatingSystemToValue(EFleetOperatingSystem OSType)
 	{
 	case EFleetOperatingSystem::Windows2016:
 		return Menu::DeployManagedEC2::kWindowsServer2016Value;
+	case EFleetOperatingSystem::Windows2022:
+		return Menu::DeployManagedEC2::kWindowsServer2022Value;
 	case EFleetOperatingSystem::AmazonLinux2:
 		return Menu::DeployManagedEC2::kAmazonLinux2Value;
 	case EFleetOperatingSystem::AmazonLinux2023:
@@ -56,6 +62,10 @@ inline EFleetOperatingSystem EFleetOperatingSystemFromValueText(const FText& OSV
 	if (OSValue.EqualTo(Menu::DeployManagedEC2::kWindowsServer2016Value))
 	{
 		return EFleetOperatingSystem::Windows2016;
+	}
+	else if (OSValue.EqualTo(Menu::DeployManagedEC2::kWindowsServer2022Value))
+	{
+		return EFleetOperatingSystem::Windows2022;
 	}
 	else if (OSValue.EqualTo(Menu::DeployManagedEC2::kAmazonLinux2Value))
 	{
