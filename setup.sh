@@ -6,6 +6,7 @@ set -euo pipefail
 
 cleanup_script="Scripts/cleanup.sh"
 dependency_script="Scripts/setup_dependencies.sh"
+compatibility_fixes_script="Scripts/apply_compatibility_fixes.sh"
 server_sdk_script="Scripts/setup_server_sdk.sh"
 
 run_script() {
@@ -22,6 +23,7 @@ run_script() {
 
 run_script "$cleanup_script"
 run_script "$dependency_script"
+run_script "$compatibility_fixes_script"
 run_script "$server_sdk_script"
 
 SCRIPT_BASE_PATH=$(pwd)

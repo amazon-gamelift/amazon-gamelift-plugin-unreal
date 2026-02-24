@@ -418,6 +418,8 @@ namespace Menu
 
 		static const auto kWindowsServer2016Name = NSLOCTEXT("EFleetOperatingSystem", "WindowsServer2016Name", "Windows Server 2016");
 		static const auto kWindowsServer2016Value = NSLOCTEXT("EFleetOperatingSystem", "WindowsServer2016Value", "WINDOWS_2016");
+		static const auto kWindowsServer2022Name = NSLOCTEXT("EFleetOperatingSystem", "WindowsServer2022Name", "Windows Server 2022");
+		static const auto kWindowsServer2022Value = NSLOCTEXT("EFleetOperatingSystem", "WindowsServer2022Value", "WINDOWS_2022");
 		static const auto kAmazonLinux2Name = NSLOCTEXT("EFleetOperatingSystem", "AmazonLinux2Name", "Amazon Linux 2 (AL2)");
 		static const auto kAmazonLinux2Value = NSLOCTEXT("EFleetOperatingSystem", "AmazonLinux2Value", "AMAZON_LINUX_2");
 		static const auto kAmazonLinux2023Name = NSLOCTEXT("EFleetOperatingSystem", "AmazonLinux2023Name", "Amazon Linux 2023 (AL2023)");
