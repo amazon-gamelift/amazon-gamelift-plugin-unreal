@@ -1,5 +1,10 @@
 CHANGELOG
 
+# 3.1.1 (2/24/2026)
+- Adds support for Unreal Engine 5.7 to the plugin and server SDK.
+- Adds Windows Server 2022 as a new operating system option in the deployment UI for managed EC2 fleets.
+- Upgrades the AWS Lambda runtime in the sample game backend to Python 3.14.
+
 # 3.1.0 (10/28/2025)
 - Adds support for publishing built-in and custom telemetry metrics, with pre-built dashboards for visualizing usage data.
 

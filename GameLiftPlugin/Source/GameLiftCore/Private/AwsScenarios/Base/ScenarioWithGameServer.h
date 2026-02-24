@@ -52,7 +52,7 @@ namespace AwsScenarios
 				return GameLift::GAMELIFT_ERROR_GENERAL;
 			}
 
-			if (InBuildOperatingSystem == "WINDOWS_2016")
+			if (InBuildOperatingSystem.StartsWith(TEXT("WINDOWS")))
 			{
 				// Windows
 				InStdLaunchPathParameter = "C:/game/" + StdServerFileRelPath.substr(StdServerFileRelPathPosition + 1);
