@@ -18,6 +18,8 @@
 class SPathInput;
 class SSelectionComboBox;
 
+DECLARE_MULTICAST_DELEGATE(FOnOperatingSystemChanged);
+
 class SDeploymentFields : public SCompoundWidget
 {
 	SLATE_BEGIN_ARGS(SDeploymentFields) {}
@@ -53,6 +55,8 @@ public:
 	const FText& GetOutConfigFilePath() const;
 	const FText& GetDeploymentScenario() const;
 	Modes GetCurrentState() const;
+
+	FOnOperatingSystemChanged OnOperatingSystemChanged;
 
 private:
 	int32 GetSetupStateAsInt() const;

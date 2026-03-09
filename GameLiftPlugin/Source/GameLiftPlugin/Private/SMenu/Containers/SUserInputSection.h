@@ -29,6 +29,7 @@ public:
 private:
     TSharedRef<SWidget> CreateMetricsInfoMessage();
     TSharedRef<SWidget> CreateMetricsCheckBox();
+    TSharedRef<SWidget> CreatePlayerGatewayCheckBox();
     TSharedRef<SWidget> CreateGameServerPathInput();
     TSharedRef<SWidget> CreateOutConfigFilePathInput();
     TSharedRef<SWidget> CreateExistingECRRepoDropdown();
@@ -71,6 +72,7 @@ private:
     void OnImageTagInputCommitted(const FText& NewInput, ETextCommit::Type InCommitInfo);
     void OnECRRepoInputCommitted(const FText& NewInput, ETextCommit::Type InCommitInfo);
     void OnEnableMetricsChanged(ECheckBoxState NewState);
+    void OnEnablePlayerGatewayChanged(ECheckBoxState NewState);
 
     void UpdateInitialUI();
     EVisibility ShowGameServerPathInput();
@@ -106,6 +108,7 @@ private:
     TSharedPtr<SEditableTextBox> ECRRepoInput;
     TSharedPtr<SCheckBox> EnableMetricsCheckBox;
     TSharedPtr<SSetupMessage> MetricsInfoMessage;
+    TSharedPtr<SCheckBox> EnablePlayerGatewayCheckBox;
     const int OverridePrimaryColumnWidth = 200;
     const int OverrideSecondaryColumnWidth = 100;
 };

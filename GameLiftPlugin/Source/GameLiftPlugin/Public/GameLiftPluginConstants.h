@@ -268,6 +268,9 @@ namespace Menu
 		static const auto kEnableMetricsTooltip = NSLOCTEXT("SDeployCommon", "EnableMetricsTooltip", "This automatically creates a fleet role with write access to Prometheus and CloudWatch, and enables shared credentials file generation on Managed EC2 fleets.");
 		static const auto kEnableMetricsInfoText = NSLOCTEXT("SDeployCommon", "EnableMetricsInfo", "Telemetry metrics provide detailed data for your game servers using the OpenTelemetry (OTEL) collector. This helps monitor performance, resource usage and custom application metrics. Unless you are eligible to select AWS Free Tier benefits, charges are incurred to your AWS account based upon the scenario you select.\n\nThis checkbox only handles AWS permissions. Follow METRICS.md in the plugin repository for complete setup instructions to enable telemetry metrics.");
 
+		static const auto kEnablePlayerGatewayTitle = NSLOCTEXT("SDeployCommon", "EnablePlayerGateway", "Enable player gateway");
+		static const auto kEnablePlayerGatewayTooltip = NSLOCTEXT("SDeployCommon", "EnablePlayerGatewayTooltip", "Enabling this setting ensures the created fleet is player gateway enabled.");
+
 		static const auto kGameClientPathTitle = NSLOCTEXT("SDeployCommon", "GameClientTitle", "Client build executable");
 		static const auto kGameClientPathHint = NSLOCTEXT("SDeployCommon", "GameClientPathHint", "Path to client build executable");
 		static const auto kGameClientPathTooltip = NSLOCTEXT("SDeployCommon", "GameClientPathTooltip", "Specify path to client build executable");
@@ -398,6 +401,14 @@ namespace Menu
 		static const auto kGameParametersHeader = NSLOCTEXT("SGameLiftDeployManagedEC2Menu", "GameParametersHeader", "Set game parameters");
 		static const auto kGameParametersDescription = NSLOCTEXT("SGameLiftDeployManagedEC2Menu", "GameParametersDescription", "Tell us about the game server build you want to deploy to this fleet. Use a server build that's been integrated and packaged with the Amazon GameLift SDKs. For guidance on integration and packaging, see the Plugin Guide for Unreal Engine.");
 
+		static const auto kServerIpProtocolTitle = NSLOCTEXT("SGameLiftDeployManagedEC2Menu", "ServerIpProtocol", "Server IP protocol");
+		static const auto kServerIpProtocolTooltip = NSLOCTEXT("SGameLiftDeployManagedEC2Menu", "ServerIpProtocolTooltip", "Select the IP protocol supported by your game server.");
+		static const auto kIpv4RadioButtonText = NSLOCTEXT("SGameLiftDeployManagedEC2Menu", "Ipv4RadioButtonText", "IPv4");
+		static const auto kDualStackRadioButtonText = NSLOCTEXT("SGameLiftDeployManagedEC2Menu", "DualStackRadioButtonText", "Dual stack");
+
+		static const FString kGameServerIpProtocolDualStack = TEXT("DUAL_STACK");
+		static const FString kGameServerIpProtocolIpv4 = TEXT("IPv4");
+		
 		static const auto kBuildName = NSLOCTEXT("SDeploymentFields", "BuildName_Text", "Server build name");
 		static const auto kBuildNameHint = NSLOCTEXT("SDeploymentFields", "BuildName_Hint", "Build name");
 		static const auto kBuildNameInstructionText = NSLOCTEXT("SDeploymentFields", "BuildName_InstructionText", "The build name must have 1-16 characters.");

@@ -1,5 +1,8 @@
 CHANGELOG
 
+# 3.2.0 (3/9/2026)
+- Added DDoS protection with player gateway for managed EC2 and container fleets in the deployment UI.
+
 # 3.1.1 (2/24/2026)
 - Adds support for Unreal Engine 5.7 to the plugin and server SDK.
 - Adds Windows Server 2022 as a new operating system option in the deployment UI for managed EC2 fleets.

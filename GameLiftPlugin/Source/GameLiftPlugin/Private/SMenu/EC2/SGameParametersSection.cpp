@@ -53,6 +53,24 @@ void SGameParametersSection::Construct(const FArguments& InArgs)
 				]
 				+ SVerticalBox::Slot()
 				.AutoHeight()
+				.Padding(SPadding::Top_Bottom)
+				[
+					SAssignNew(EnablePlayerGatewayRow, SBox)
+					[
+						CreatePlayerGatewayCheckBox()
+					]
+				]
+				+ SVerticalBox::Slot()
+				.AutoHeight()
+				.Padding(SPadding::Top_Bottom)
+				[
+					SAssignNew(GameServerIpProtocolRow, SBox)
+					[
+						CreateGameServerIpProtocolRadioButtons()
+					]
+				]
+				+ SVerticalBox::Slot()
+				.AutoHeight()
 				.HAlign(HAlign_Left)
 				.Padding(SPadding::Top3x)
 				[
@@ -70,6 +88,20 @@ void SGameParametersSection::Construct(const FArguments& InArgs)
 
 	SDeployScenarioSection::OnEC2DeploymentProgressChangedMultiDelegate.AddSP(this, &SGameParametersSection::UpdateUIBasedOnCurrentState);
 	UpdateUIBasedOnCurrentState();
+
+	// Subscribe to OS changes and set initial visibility
+	auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
+	DeploymentInfo->OnOperatingSystemChanged.AddSP(this, &SGameParametersSection::UpdatePlayerGatewayVisibility);
+	UpdatePlayerGatewayVisibility();
+}
+
+SGameParametersSection::~SGameParametersSection()
+{
+	if (DeploymentFields.IsValid())
+	{
+		auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
+		DeploymentInfo->OnOperatingSystemChanged.RemoveAll(this);
+	}
 }
 
 TSharedRef<SWidget> SGameParametersSection::CreateMetricsInfoMessage()
@@ -98,7 +130,67 @@ TSharedRef<SWidget> SGameParametersSection::CreateMetricsCheckBox()
 		.NameText(Menu::DeployCommon::kEnableMetricsTitle)
 		.NameTooltipText(Menu::DeployCommon::kEnableMetricsTooltip)
 		.RowWidget(EnableMetricsCheckBox.ToSharedRef());
-	
+
+}
+
+TSharedRef<SWidget> SGameParametersSection::CreatePlayerGatewayCheckBox()
+{
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	EnablePlayerGatewayCheckBox = SNew(SCheckBox)
+		.IsChecked(DeploySettings->EnablePlayerGateway ? ECheckBoxState::Checked : ECheckBoxState::Unchecked)
+		.OnCheckStateChanged_Raw(this, &SGameParametersSection::OnEnablePlayerGatewayChanged);
+
+	return SNew(SNamedRow)
+		.NameText(Menu::DeployCommon::kEnablePlayerGatewayTitle)
+		.NameTooltipText(Menu::DeployCommon::kEnablePlayerGatewayTooltip)
+		.RowWidget(EnablePlayerGatewayCheckBox.ToSharedRef());
+}
+
+TSharedRef<SWidget> SGameParametersSection::CreateGameServerIpProtocolRadioButtons()
+{
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	if (DeploySettings->GameServerIpProtocol.IsEmpty())
+	{
+		DeploySettings->GameServerIpProtocol = Menu::DeployManagedEC2::kGameServerIpProtocolIpv4;
+	}
+
+	return SNew(SNamedRow)
+		.NameText(Menu::DeployManagedEC2::kServerIpProtocolTitle)
+		.NameTooltipText(Menu::DeployManagedEC2::kServerIpProtocolTooltip)
+		.RowWidget(
+			SNew(SHorizontalBox)
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
+			.Padding(0, 0, 10, 0)
+			[
+				SNew(SCheckBox)
+				.Style(FAppStyle::Get(), "RadioButton")
+				.IsChecked(this, &SGameParametersSection::IsGameServerIpProtocolChecked, EIpProtocol::IPv4)
+				.OnCheckStateChanged_Lambda([this](ECheckBoxState NewState)
+				{
+					OnGameServerIpProtocolChanged(EIpProtocol::IPv4, NewState);
+				})
+				[
+					SNew(STextBlock)
+					.Text(Menu::DeployManagedEC2::kIpv4RadioButtonText)
+				]
+			]
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
+			[
+				SNew(SCheckBox)
+				.Style(FAppStyle::Get(), "RadioButton")
+				.IsChecked(this, &SGameParametersSection::IsGameServerIpProtocolChecked, EIpProtocol::DualStack)
+				.OnCheckStateChanged_Lambda([this](ECheckBoxState NewState)
+				{
+					OnGameServerIpProtocolChanged(EIpProtocol::DualStack, NewState);
+				})
+				[
+					SNew(STextBlock)
+					.Text(Menu::DeployManagedEC2::kDualStackRadioButtonText)
+				]
+			]
+		);
 }
 
 TSharedRef<SWidget> SGameParametersSection::CreateSubmissionButton()
@@ -155,6 +247,40 @@ void SGameParametersSection::OnEnableMetricsChanged(ECheckBoxState NewState)
 	DeploySettings->SaveConfig();
 }
 
+void SGameParametersSection::OnEnablePlayerGatewayChanged(ECheckBoxState NewState)
+{
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	DeploySettings->EnablePlayerGateway = (NewState == ECheckBoxState::Checked);
+	DeploySettings->SaveConfig();
+
+	// Show/hide IP protocol options based on player gateway state
+	if (GameServerIpProtocolRow.IsValid())
+	{
+		GameServerIpProtocolRow->SetVisibility(
+			DeploySettings->EnablePlayerGateway ? EVisibility::Visible : EVisibility::Collapsed
+		);
+	}
+}
+
+ECheckBoxState SGameParametersSection::IsGameServerIpProtocolChecked(EIpProtocol Protocol) const
+{
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	FString ProtocolString = (Protocol == EIpProtocol::DualStack) ? Menu::DeployManagedEC2::kGameServerIpProtocolDualStack : Menu::DeployManagedEC2::kGameServerIpProtocolIpv4;
+	return (DeploySettings->GameServerIpProtocol == ProtocolString)
+		? ECheckBoxState::Checked
+		: ECheckBoxState::Unchecked;
+}
+
+void SGameParametersSection::OnGameServerIpProtocolChanged(EIpProtocol Protocol, ECheckBoxState NewState)
+{
+	if (NewState == ECheckBoxState::Checked)
+	{
+		UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+		DeploySettings->GameServerIpProtocol = (Protocol == EIpProtocol::DualStack) ? Menu::DeployManagedEC2::kGameServerIpProtocolDualStack : Menu::DeployManagedEC2::kGameServerIpProtocolIpv4;
+		DeploySettings->SaveConfig();
+	}
+}
+
 void SGameParametersSection::UpdateUIBasedOnCurrentState()
 {
 	// TODO: Add state for each section completion
@@ -178,8 +304,11 @@ void SGameParametersSection::CompleteSection()
 	auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
 	DeploymentInfo->SetAllFieldsReadOnly(true);
 	EnableMetricsCheckBox->SetEnabled(false);
+	EnablePlayerGatewayCheckBox->SetEnabled(false);
+	GameServerIpProtocolRow->SetEnabled(false);
 	SectionSwitcher->SetActiveWidgetIndex((int32)ESectionUIState::Complete);
 	SetProgressBarState(SProgressBar::EProgressBarUIState::ProgressComplete);
+	UpdatePlayerGatewayVisibility();
 }
 
 void SGameParametersSection::StartSection()
@@ -187,7 +316,28 @@ void SGameParametersSection::StartSection()
 	auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
 	DeploymentInfo->SetAllFieldsReadOnly(false);
 	EnableMetricsCheckBox->SetEnabled(true);
+	EnablePlayerGatewayCheckBox->SetEnabled(true);
+	GameServerIpProtocolRow->SetEnabled(true);
 	SectionSwitcher->SetActiveWidgetIndex((int32)ESectionUIState::InComplete);
+	UpdatePlayerGatewayVisibility();
+}
+
+void SGameParametersSection::UpdatePlayerGatewayVisibility()
+{
+	if (!EnablePlayerGatewayRow.IsValid() || !DeploymentFields.IsValid())
+	{
+		return;
+	}
+
+	UGameLiftDeploymentStatus* DeploySettings = GetMutableDefault<UGameLiftDeploymentStatus>();
+	auto DeploymentInfo = AsSDeploymentFieldsRef(DeploymentFields);
+	FText OS = DeploymentInfo->GetBuildOperatingSystem();
+	
+	bool bIsWindows = OS.EqualTo(Menu::DeployManagedEC2::kWindowsServer2016Value) || 
+	                  OS.EqualTo(Menu::DeployManagedEC2::kWindowsServer2022Value);
+	
+	EnablePlayerGatewayRow->SetVisibility(bIsWindows ? EVisibility::Collapsed : EVisibility::Visible);
+	GameServerIpProtocolRow->SetVisibility(bIsWindows || !DeploySettings->EnablePlayerGateway ? EVisibility::Collapsed : EVisibility::Visible);
 }
 
 #undef LOCTEXT_NAMESPACE

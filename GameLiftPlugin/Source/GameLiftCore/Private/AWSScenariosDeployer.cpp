@@ -239,7 +239,9 @@ bool AWSScenariosDeployer::DeployManagedEC2Scenario(
 	const FString& BuildFilePath,
 	const FString& OutConfigFilePath,
 	const FString& ExtraServerResourcesPath,
-	bool EnableMetrics
+	bool EnableMetrics,
+	bool EnablePlayerGateway,
+	const FString& GameServerIpProtocol
 )
 {
 	UE_LOG(GameLiftCoreLog, Log, TEXT("%s %s"), Deploy::Logs::kRunAwsScenario, *Scenario.ToString());
@@ -260,7 +262,15 @@ bool AWSScenariosDeployer::DeployManagedEC2Scenario(
 
 	Params.BuildOperatingSystemParameter = Convertors::FSToStdS(BuildOperatingSystem);
 	Params.LaunchPathParameter = stdLaunchPathParameter;
-	Params.EnableMetricsParameter = EnableMetrics  ? "true" : "false";
+	Params.EnableMetricsParameter = EnableMetrics ? "true" : "false";
+	
+	if (BuildOperatingSystem.Contains("WINDOWS")) {
+		Params.EnablePlayerGatewayParameter = "DISABLED";
+	} else {
+		Params.EnablePlayerGatewayParameter = EnablePlayerGateway ? "ENABLED" : "DISABLED";
+	}
+
+	Params.GameServerIpProtocolSupportedParameter = Convertors::FSToStdS(GameServerIpProtocol);
 
 	return DeployScenarioImpl(AwsAccountInstance, AwsScenario, Params, OutConfigFilePath);
 }
@@ -299,7 +309,7 @@ bool AWSScenariosDeployer::DeployContainerScenario(
 	const FText& Scenario, IAWSAccountInstance* AwsAccountInstance, const FString& ContainerGroupDefinitionName,
 	const FString& ContainerImageName, const FString& ContainerImageUri, const FString& IntraContainerLaunchPath,
 	const FString& GameName, const FString& OutConfigFilePath, const FText& ConnectionPortRange, const FString& TotalVcpuLimit,
-	const FString& TotalMemoryLimit, bool EnableMetrics)
+	const FString& TotalMemoryLimit, bool EnableMetrics, bool EnablePlayerGateway)
 {
 	AwsScenarios::IAWSScenario* AwsScenario = AwsDeployerInternal::GetAwsScenarioByName(
 		Scenario,
@@ -322,6 +332,7 @@ bool AWSScenariosDeployer::DeployContainerScenario(
 	Params.TotalVcpuLimitParameter = Convertors::FSToStdS(TotalVcpuLimit);
 	Params.TotalMemoryLimitParameter = Convertors::FSToStdS(TotalMemoryLimit);
 	Params.EnableMetricsParameter = EnableMetrics  ? "true" : "false";
+	Params.EnablePlayerGatewayParameter = EnablePlayerGateway ? "ENABLED" : "DISABLED";
 
 	return DeployScenarioImpl(AwsAccountInstance, AwsScenario, Params, OutConfigFilePath);
 }

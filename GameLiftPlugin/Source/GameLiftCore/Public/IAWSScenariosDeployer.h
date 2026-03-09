@@ -25,7 +25,9 @@ public:
 		const FString& BuildFilePath,
 		const FString& OutConfigFilePath,
 		const FString& ExtraServerResourcesPath,
-		bool EnableMetrics
+		bool EnableMetrics,
+		bool EnablePlayerGateway,
+		const FString& GameServerIpProtocol
 	) = 0;
 	virtual bool DeployCustomScenario(
 		const FString& CustomScenarioPath,
@@ -48,7 +50,8 @@ public:
 		const FText& ConnectionPortRange,
 		const FString& TotalVcpuLimit,
 		const FString& TotalMemoryLimit,
-		bool EnableMetrics
+		bool EnableMetrics,
+		bool EnablePlayerGateway
 	) = 0;
 	virtual bool StopDeployment(IAWSAccountInstance* AwsAccountInstance) = 0;
 
