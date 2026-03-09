@@ -49,7 +49,7 @@ You’ll need the following tools to install and run the plugin with your Unreal
 2. If you downloaded the plugin from the [**Releases**](https://github.com/amazon-gamelift/amazon-gamelift-plugin-unreal/releases) page, unzip the downloaded file `amazon-gamelift-plugin-unreal-release-<version>.zip`.
 3. If you cloned the repository, run the following command in the root directory of the repository:
 
-   For Linux or Max:
+   For Linux or Mac:
     ```sh
     chmod +x setup.sh
     sh setup.sh
