@@ -93,6 +93,12 @@ Parameters:
     AllowedValues: ["true", "false"]
     Description: "Enable telemetry metrics collection using OTEL collector"
 
+  EnablePlayerGatewayParameter:
+    Type: String
+    Default: "DISABLED"
+    AllowedValues: ["ENABLED", "DISABLED"]
+    Description: "Enable player gateway on the created fleet"
+
 Conditions:
   ShouldCreateMetricsResources: !Equals [!Ref EnableMetricsParameter, "true"]
 
@@ -408,6 +414,7 @@ Resources:
       GameSessionCreationLimitPolicy:
         NewGameSessionsPerCreator: 5
         PolicyPeriodInMinutes: 2
+      PlayerGatewayMode: !Ref EnablePlayerGatewayParameter
 
   AliasResource:
     Type: "AWS::GameLift::Alias"

@@ -33,7 +33,7 @@ If you're starting a new Unreal project, create a game using the Third Person te
 2. If you downloaded the plugin from the [**Releases**](https://github.com/amazon-gamelift/amazon-gamelift-plugin-unreal/releases) page, unzip the downloaded file `GameLift-Cpp-ServerSDK-UnrealPlugin-<version>.zip`. 
 3. If you cloned the repository, run the following command in the root directory of the repository:
    
-    For Linux or Max:
+    For Linux or Mac:
     ```sh
     chmod +x setup.sh
     sh setup.sh

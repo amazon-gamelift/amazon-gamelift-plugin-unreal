@@ -43,7 +43,7 @@ If you’re interested in contributing to the Amazon GameLift Servers Plugins, c
 1. Implement your desired changes or additions to the codebase within the cloned repository.
 2. Once your changes are ready for testing, navigate to the root directory of the repository and run the following command:
     
-    For Linux or Max:
+    For Linux or Mac:
     ```sh
     chmod +x setup.sh
     sh setup.sh

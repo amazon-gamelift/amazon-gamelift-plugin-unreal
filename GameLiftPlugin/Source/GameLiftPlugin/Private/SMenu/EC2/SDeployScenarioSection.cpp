@@ -261,7 +261,9 @@ FReply SDeployScenarioSection::DeployCloudFormation()
 				DeploySettings->BuildFilePath.ToString(),
 				DeploySettings->OutConfigFilePath.ToString(),
 				DeploySettings->ExtraServerResourcesPath.ToString(),
-				DeploySettings->EnableMetrics
+				DeploySettings->EnableMetrics,
+				DeploySettings->EnablePlayerGateway,
+				DeploySettings->GameServerIpProtocol
 			);
 
 			if (IsDeployed)

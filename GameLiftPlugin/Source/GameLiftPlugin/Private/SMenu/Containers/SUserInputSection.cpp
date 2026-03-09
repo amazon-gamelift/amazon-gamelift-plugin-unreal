@@ -56,6 +56,13 @@ void SUserInputSection::Construct(const FArguments& InArgs)
 
     VerticalBox->AddSlot()
         .AutoHeight()
+        .Padding(SPadding::Top_Bottom)
+        [
+            CreatePlayerGatewayCheckBox()
+        ];
+
+    VerticalBox->AddSlot()
+        .AutoHeight()
         .Padding(SPadding::Bottom2x)
         [
             SNew(SBox)
@@ -162,6 +169,20 @@ TSharedRef<SWidget> SUserInputSection::CreateMetricsCheckBox()
         .NameTooltipText(Menu::DeployCommon::kEnableMetricsTooltip)
         .PrimaryColumnWidthOverride(OverridePrimaryColumnWidth)
         .RowWidget(EnableMetricsCheckBox.ToSharedRef());
+}
+
+TSharedRef<SWidget> SUserInputSection::CreatePlayerGatewayCheckBox()
+{
+    UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
+    EnablePlayerGatewayCheckBox = SNew(SCheckBox)
+        .IsChecked(ContainersStatus->EnablePlayerGateway ? ECheckBoxState::Checked : ECheckBoxState::Unchecked)
+        .OnCheckStateChanged_Raw(this, &SUserInputSection::OnEnablePlayerGatewayChanged);
+    
+    return SNew(SNamedRow)
+    	.NameText(Menu::DeployCommon::kEnablePlayerGatewayTitle)
+    	.NameTooltipText(Menu::DeployCommon::kEnablePlayerGatewayTooltip)
+    	.PrimaryColumnWidthOverride(OverridePrimaryColumnWidth)
+    	.RowWidget(EnablePlayerGatewayCheckBox.ToSharedRef());
 }
 
 TSharedRef<SWidget> SUserInputSection::CreateGameServerPathInput()
@@ -896,6 +917,13 @@ void SUserInputSection::OnEnableMetricsChanged(ECheckBoxState NewState)
 {
     UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
     ContainersStatus->EnableMetrics = (NewState == ECheckBoxState::Checked);
+    ContainersStatus->SaveConfig();
+}
+
+void SUserInputSection::OnEnablePlayerGatewayChanged(ECheckBoxState NewState)
+{
+    UGameLiftContainersStatus* ContainersStatus = GetMutableDefault<UGameLiftContainersStatus>();
+    ContainersStatus->EnablePlayerGateway = (NewState == ECheckBoxState::Checked);
     ContainersStatus->SaveConfig();
 }
 

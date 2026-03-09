@@ -527,7 +527,8 @@ FReply SCreateContainerGroupSection::DeployCloudFormation()
 				ContainersStatus->ConnectionPortRange,
 				ContainersStatus->TotalVCPULimit.ToString(),
 				ContainersStatus->TotalMemoryLimit.ToString(),
-				ContainersStatus->EnableMetrics
+				ContainersStatus->EnableMetrics,
+				ContainersStatus->EnablePlayerGateway
 			);
 			if (IsDeployed)
 			{

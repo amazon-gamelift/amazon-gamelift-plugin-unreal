@@ -28,7 +28,9 @@ namespace AwsScenarios
 				"LaunchPathParameter",
 				"BuildS3KeyParameter",
 				"UnrealEngineVersionParameter",
-				"EnableMetricsParameter"
+				"EnableMetricsParameter",
+				"EnablePlayerGatewayParameter",
+				"GameServerIpProtocolSupportedParameter"
 			};
 			return paramNames;
 		}
@@ -50,7 +52,9 @@ namespace AwsScenarios
 				TemplateParams.LaunchPathParameter.c_str(),
 				BuildS3Path.c_str(),
 				TemplateParams.UnrealEngineVersionParameter.c_str(),
-				TemplateParams.EnableMetricsParameter.c_str()
+				TemplateParams.EnableMetricsParameter.c_str(),
+				TemplateParams.EnablePlayerGatewayParameter.c_str(),
+				TemplateParams.GameServerIpProtocolSupportedParameter.c_str()
 			};
 
 			auto* ParamNames = GetParamNames();

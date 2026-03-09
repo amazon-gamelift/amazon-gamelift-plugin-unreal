@@ -177,6 +177,7 @@ void SDeploymentFields::OnBuildingSupportedOperatingSystemValues(TArray<FTextInt
 void SDeploymentFields::OnOperatingSystemSelected(int SelectionId, const FTextIntPair& Item)
 {
 	CurrentOperatingSystemSelected = SelectionId;
+	OnOperatingSystemChanged.Broadcast();
 }
 
 void SDeploymentFields::SetGameOnlyMode()

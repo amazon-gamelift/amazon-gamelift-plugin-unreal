@@ -31,3 +31,5 @@ UnrealEngineVersionParameter:
   value: "{{AWSGAMELIFT::VARS::UnrealEngineVersionParameter}}"
 EnableMetricsParameter:
   value: "{{AWSGAMELIFT::VARS::EnableMetricsParameter}}"
+EnablePlayerGatewayParameter:
+  value: "{{AWSGAMELIFT::VARS::EnablePlayerGatewayParameter}}"

@@ -114,8 +114,21 @@ Parameters:
     AllowedValues: ["true", "false"]
     Description: "Enable telemetry metrics collection using OTEL collector"
 
+  EnablePlayerGatewayParameter:
+    Type: String
+    Default: "DISABLED"
+    AllowedValues: ["ENABLED", "DISABLED"]
+    Description: "Enable player gateway on the created fleet"
+
+  GameServerIpProtocolSupportedParameter:
+    Type: String
+    Default: "IPv4"
+    AllowedValues: ["IPv4", "DUAL_STACK"]
+    Description: "IP protocol supported by the game server when player gateway is enabled"
+
 Conditions:
   ShouldCreateMetricsResources: !Equals [!Ref EnableMetricsParameter, "true"]
+  IsPlayerGatewayEnabled: !Equals [!Ref EnablePlayerGatewayParameter, "ENABLED"]
 
 Resources:
   ApiGatewayCloudWatchRole:
@@ -454,6 +467,11 @@ Resources:
           - ConcurrentExecutions: 1
             LaunchPath: !Ref LaunchPathParameter
             Parameters: !Ref LaunchParametersParameter
+      PlayerGatewayMode: !Ref EnablePlayerGatewayParameter
+      PlayerGatewayConfiguration: !If
+        - IsPlayerGatewayEnabled
+        - GameServerIpProtocolSupported: !Ref GameServerIpProtocolSupportedParameter
+        - !Ref "AWS::NoValue"
 
   AliasResource:
     Type: "AWS::GameLift::Alias"

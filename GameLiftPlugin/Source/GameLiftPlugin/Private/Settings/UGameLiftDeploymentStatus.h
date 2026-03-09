@@ -27,6 +27,10 @@ public:
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	bool EnableMetrics;
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
+	bool EnablePlayerGateway;
+	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
+	FString GameServerIpProtocol;
+	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText BuildName;
 	UPROPERTY(config, EditAnywhere, Category = "Deployment Status")
 	FText BuildOperatingSystem;

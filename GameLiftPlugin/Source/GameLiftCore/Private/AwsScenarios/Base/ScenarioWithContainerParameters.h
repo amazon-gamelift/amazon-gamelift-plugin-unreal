@@ -33,7 +33,8 @@ namespace AwsScenarios
 				"TotalVcpuLimitParameter",
 				"TotalMemoryLimitParameter",
 				"UnrealEngineVersionParameter",
-				"EnableMetricsParameter"
+				"EnableMetricsParameter",
+				"EnablePlayerGatewayParameter"
 			};
 			return paramNames;
 		}
@@ -60,7 +61,8 @@ namespace AwsScenarios
 				TemplateParams.TotalVcpuLimitParameter.c_str(),
 				TemplateParams.TotalMemoryLimitParameter.c_str(),
 				TemplateParams.UnrealEngineVersionParameter.c_str(),
-				TemplateParams.EnableMetricsParameter.c_str()
+				TemplateParams.EnableMetricsParameter.c_str(),
+				TemplateParams.EnablePlayerGatewayParameter.c_str()
 			};
 
 			auto* ParamNames = GetParamNames();
