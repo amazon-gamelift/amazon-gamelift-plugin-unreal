@@ -23,9 +23,6 @@ public class GameLiftServerSDK : ModuleRules
         bEnableExceptions = true;
         bUseRTTI = true;
 
-        // Disable windows min/max macros
-        PublicDefinitions.Add("NOMINMAX");
-
         if (Target.Type == TargetRules.TargetType.Server)
         {
             PublicDefinitions.Add("WITH_GAMELIFT=1");
@@ -66,8 +63,10 @@ public class GameLiftServerSDK : ModuleRules
         else if (Target.Platform == UnrealTargetPlatform.Linux || Target.Platform == UnrealTargetPlatform.LinuxArm64)
         {
             PrivateDefinitions.Add("ASIO_DISABLE_CO_AWAIT");
-            PrivateDefinitions.Add("RAPIDJSON_NOMEMBERITERATORCLASS");
         }
+
+        // Suppress STL4015: std::iterator is deprecated in C++17. Applies to all platforms.
+        PrivateDefinitions.Add("RAPIDJSON_NOMEMBERITERATORCLASS");
 
         string SpdlogPath = Path.Combine(ModuleDirectory, "../../ThirdParty/spdlog/include");
         string SpdlogSrcPath = Path.Combine(ModuleDirectory, "../../ThirdParty/spdlog/src");
