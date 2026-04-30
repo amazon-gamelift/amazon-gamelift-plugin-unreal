@@ -1,5 +1,8 @@
 CHANGELOG
 
+# 3.2.1 (4/30/2026)
+- Fixes MSVC compilation warnings in the Server SDK module.
+
 # 3.2.0 (3/9/2026)
 - Added DDoS protection with player gateway for managed EC2 and container fleets in the deployment UI.
 
