@@ -1,0 +1,1 @@
+- Fixes compilation warnings when building with MSVC.
