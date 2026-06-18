@@ -553,6 +553,49 @@ FGameLiftGetFleetRoleCredentialsOutcome FGameLiftServerSDKModule::GetFleetRoleCr
 #endif
 }
 
+FGameLiftListContainersNetworkInfoOutcome FGameLiftServerSDKModule::ListContainersNetworkInfo()
+{
+#if WITH_GAMELIFT
+    auto outcome = Aws::GameLift::Server::ListContainersNetworkInfo();
+    if (outcome.IsSuccess()) {
+        auto& outres = outcome.GetResult();
+        FGameLiftListContainersNetworkInfoResult result;
+
+        const int count = outres.GetContainersNetworkInfoCount();
+        if (count > 0) {
+            const auto* containersNetworkInfo = outres.GetContainersNetworkInfo();
+            result.m_containersNetworkInfo.Reserve(count);
+
+            for (int i = 0; i < count; ++i) {
+                const auto& info = containersNetworkInfo[i];
+                FContainerNetworkInfo& dst = result.m_containersNetworkInfo.AddDefaulted_GetRef();
+                dst.m_containerName = UTF8_TO_TCHAR(info.GetContainerName());
+                dst.m_containerId   = UTF8_TO_TCHAR(info.GetContainerId());
+                dst.m_ipAddress     = UTF8_TO_TCHAR(info.GetIpAddress());
+                switch (info.GetContainerGroupType()) {
+                    case Aws::GameLift::Server::Model::ContainerGroupType::GAME_SERVER:
+                        dst.m_containerGroupType = EContainerGroupType::GAME_SERVER;
+                        break;
+                    case Aws::GameLift::Server::Model::ContainerGroupType::PER_INSTANCE:
+                        dst.m_containerGroupType = EContainerGroupType::PER_INSTANCE;
+                        break;
+                    default:
+                        dst.m_containerGroupType = EContainerGroupType::GAME_SERVER;
+                        break;
+                }
+            }
+        }
+
+        return FGameLiftListContainersNetworkInfoOutcome(result);
+    }
+    else {
+        return FGameLiftListContainersNetworkInfoOutcome(FGameLiftError(outcome.GetError()));
+    }
+#else
+    return FGameLiftListContainersNetworkInfoOutcome(FGameLiftListContainersNetworkInfoResult());
+#endif
+}
+
 #undef LOCTEXT_NAMESPACE
 
 IMPLEMENT_MODULE(FGameLiftServerSDKModule, GameLiftServerSDK)
