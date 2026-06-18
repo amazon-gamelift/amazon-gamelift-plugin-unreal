@@ -149,6 +149,7 @@ public:
 
     virtual FGameLiftGetComputeCertificateOutcome GetComputeCertificate();
     virtual FGameLiftGetFleetRoleCredentialsOutcome GetFleetRoleCredentials(const FGameLiftGetFleetRoleCredentialsRequest& request);
+    virtual FGameLiftListContainersNetworkInfoOutcome ListContainersNetworkInfo();
 
 private:
     /** Handle to the dll we will load */

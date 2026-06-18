@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 7,
-	"VersionName": "3.2.1",
+	"Version": 8,
+	"VersionName": "3.3.0",
 	"FriendlyName": "Amazon GameLift Plugin",
 	"Description": "Integrate your session-based multiplayer game with Amazon GameLift and create a dedicated cloud hosting solution for your game servers.",
 	"Category": "Networking",

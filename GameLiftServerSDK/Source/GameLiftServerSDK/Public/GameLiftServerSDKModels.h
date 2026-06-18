@@ -159,6 +159,25 @@ struct GAMELIFTSERVERSDK_API FGameLiftGetFleetRoleCredentialsRequest
     FString m_roleSessionName;
 };
 
+enum class GAMELIFTSERVERSDK_API EContainerGroupType
+{
+    GAME_SERVER,
+    PER_INSTANCE
+};
+
+struct GAMELIFTSERVERSDK_API FContainerNetworkInfo
+{
+    FString m_containerName;
+    FString m_containerId;
+    FString m_ipAddress;
+    EContainerGroupType m_containerGroupType = EContainerGroupType::GAME_SERVER;
+};
+
+struct GAMELIFTSERVERSDK_API FGameLiftListContainersNetworkInfoResult
+{
+    TArray<FContainerNetworkInfo> m_containersNetworkInfo;
+};
+
 struct GAMELIFTSERVERSDK_API FGameLiftError {
     Aws::GameLift::GAMELIFT_ERROR_TYPE m_errorType;
     FString m_errorName;
@@ -278,3 +297,4 @@ typedef TGameLiftOutcome<long, FGameLiftError> FGameLiftLongOutcome;
 typedef TGameLiftOutcome<FGameLiftDescribePlayerSessionsResult, FGameLiftError> FGameLiftDescribePlayerSessionsOutcome;
 typedef TGameLiftOutcome<FGameLiftGetComputeCertificateResult, FGameLiftError> FGameLiftGetComputeCertificateOutcome;
 typedef TGameLiftOutcome<FGameLiftGetFleetRoleCredentialsResult, FGameLiftError> FGameLiftGetFleetRoleCredentialsOutcome;
+typedef TGameLiftOutcome<FGameLiftListContainersNetworkInfoResult, FGameLiftError> FGameLiftListContainersNetworkInfoOutcome;

@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-$sdkUrl = "https://github.com/amazon-gamelift/amazon-gamelift-servers-cpp-server-sdk/releases/download/v5.4.1/GameLift-Cpp-ServerSDK-5.4.1.zip"
+$sdkUrl = "https://github.com/amazon-gamelift/amazon-gamelift-servers-cpp-server-sdk/releases/download/v5.5.0/GameLift-Cpp-ServerSDK-5.5.0.zip"
 $rootDir = Resolve-Path "$PSScriptRoot\.."
 $tempFolder = Join-Path $rootDir "Temp"
 $downloadFolder = Join-Path $tempFolder "downloads"
