@@ -1,5 +1,8 @@
 CHANGELOG
 
+# 3.3.0 (6/18/2026)
+- Adds the ListContainersNetworkInfo() server SDK action to retrieve network information for all containers running on the same instance of a managed container fleet, enabling container-to-container discovery.
+
 # 3.2.1 (4/30/2026)
 - Fixes MSVC compilation warnings in the Server SDK module.
 

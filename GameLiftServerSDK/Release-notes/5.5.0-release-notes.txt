@@ -1,0 +1,1 @@
+- Adds the ListContainersNetworkInfo() server SDK action to retrieve network information for all containers running on the same instance of a managed container fleet, enabling container-to-container discovery.
