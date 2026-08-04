@@ -41,14 +41,25 @@ public class GameLiftServerSDK : ModuleRules
         PublicDefinitions.Add("SPDLOG_NO_EXCEPTIONS");
 
         // std::invoke_result replaces std::result_of for C++17 and later
-        // Asio only auto-detects this for MSVC, so override for all compilers
-        if (Target.CppStandard >= CppStandardVersion.Cpp17) {
-            PrivateDefinitions.Add("ASIO_HAS_STD_INVOKE_RESULT");
-        }
+        // Asio only auto-detects this for MSVC, so override for all compilers.
+        // UE 5.8 made C++20 the minimum and removed the CppStandardVersion.Cpp17
+        // enum value; referencing it now fails to compile ("Cpp17 is no longer
+        // allowed"). Since C++17 is always satisfied on supported engines, add
+        // the define unconditionally instead of gating on the removed enum.
+        PrivateDefinitions.Add("ASIO_HAS_STD_INVOKE_RESULT");
 
         PrivateDefinitions.Add("USE_IMPORT_EXPORT=1");
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
+            // Prevent windows.h (pulled in transitively by websocketpp/winsock2) from
+            // defining the min/max function-like macros. Without this, a source file that
+            // includes both websocketpp and rapidjson (e.g. WebSocketppClientWrapper.cpp)
+            // has the macros mangle rapidjson's std::numeric_limits<float>::max() and fails
+            // to compile. websocketpp only defines NOMINMAX right before its own windows.h
+            // include, which is too late if windows.h was already included; defining it at
+            // module scope makes it order-independent. Unity builds hid this via include
+            // grouping; non-unity builds compile the file on its own and expose it.
+            PrivateDefinitions.Add("NOMINMAX");
             PrivateDefinitions.Add("_WEBSOCKETPP_CPP11_STRICT_=1");
             PrivateDefinitions.Add("SPDLOG_WCHAR_TO_UTF8_SUPPORT=1");
             PrivateDefinitions.AddRange(new string[] {

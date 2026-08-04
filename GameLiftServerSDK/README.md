@@ -1,6 +1,6 @@
 # Amazon GameLift Servers SDK for Unreal Engine
 
-The Amazon GameLift Servers SDK for Unreal Engine is compatible with UE5 versions (5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7), and supports development and packaging of game servers for Windows or Linux, as well as game clients for any Unreal-supported platform.
+The Amazon GameLift Servers SDK for Unreal Engine is compatible with UE5 versions (5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8), and supports development and packaging of game servers for Windows or Linux, as well as game clients for any Unreal-supported platform.
 The SDK supports both x64 and ARM architectures, with ARM architecture being supported starting from Unreal Engine version 5.0 and above.
 
 ## Install the SDK for Unreal Engine
@@ -92,6 +92,95 @@ This telemetry metrics solution enables the feature to collect and ship telemetr
 ```
     bUseAdaptiveUnityBuild = false;
 ```
+
+## SDK Logging Configuration
+
+By default, Amazon GameLift Server SDK log messages are forwarded to Unreal Engine's logging system via `UE_LOG` under the `LogGameLiftServerSDK` category. These logs persist in UE's standard log output (e.g., `Saved/Logs/`) alongside your game's other log messages — no separate SDK log file is produced.
+
+### Controlling visible log detail (UE verbosity)
+
+The amount of SDK log output you see is controlled by Unreal's standard category verbosity for `LogGameLiftServerSDK`. The category's default runtime verbosity is **Log** (Info-level and above). This is the same mechanism used for all UE log categories and can be changed at any time — even while the server is running.
+
+**Raise verbosity on the command line:**
+```
+-LogCmds="LogGameLiftServerSDK VeryVerbose"
+```
+
+**Raise verbosity at runtime (editor console or in-game console):**
+```
+Log LogGameLiftServerSDK VeryVerbose
+```
+
+**Set verbosity via ini (`DefaultEngine.ini` or per-platform Engine ini):**
+```ini
+[Core.Log]
+LogGameLiftServerSDK=VeryVerbose
+```
+
+### Configuration (DefaultGame.ini)
+
+Additional SDK-side logging settings are configured under the following section:
+
+```ini
+[/Script/GameLiftServerSDK.GameLiftLoggingConfig]
+LogDestination=UELog
+MinLogLevel=Trace
+```
+
+#### LogDestination
+
+Controls where SDK logs are written.
+
+| Value | Behavior |
+|-------|----------|
+| `UELog` (default) | SDK logs are forwarded to `UE_LOG(LogGameLiftServerSDK, ...)` and appear in Unreal's log output. |
+| `SDKFile` | SDK uses its own internal file + stdout logging, fixed at `Info` level. Useful if you need the SDK's rotating log files separate from UE logs. **Note:** `MinLogLevel` has no effect in this mode (see below). |
+
+#### MinLogLevel (optional hard cap)
+
+Sets the minimum severity at which the SDK will emit log messages to the callback. Messages below this level are never formatted or forwarded. Only applies when `LogDestination=UELog` — when `LogDestination=SDKFile`, this setting is **ignored** and the SDK's built-in file logger always logs at a fixed `Info` level.
+
+The default is **Trace** — all SDK messages reach the UE callback, and actual visibility is controlled by UE's category verbosity (see above). This default is deliberate: it preserves runtime verbosity toggling via `-LogCmds` and the console.
+
+Setting `MinLogLevel` above Trace is an **opt-in production hard cap** that prevents the SDK from formatting messages below the cap, reducing overhead in performance-critical builds. The tradeoff: runtime verbosity toggling cannot reveal levels below the cap because the SDK filter is fixed at `InitSDK` time.
+
+| Value | UE_LOG Verbosity | Description |
+|-------|-------------------|-------------|
+| `Trace` (default) | VeryVerbose | All SDK messages reach the callback |
+| `Debug` | Verbose | Debug-level and above |
+| `Info` | Log | Informational and above |
+| `Warn` | Warning | Warnings and above |
+| `Error` | Error | Errors and fatal conditions only |
+| `Fatal` | Error | Fatal SDK messages only (logged as Error to avoid crashing the server) |
+| `Off` | — | Suppresses all SDK log forwarding to UE_LOG |
+
+### Examples
+
+**Default behavior (no configuration needed):** All SDK messages reach UE_LOG. Visibility is controlled by the `LogGameLiftServerSDK` category verbosity (default: Log = Info and above).
+
+**Enable verbose SDK logging for debugging:** Raise UE's category verbosity to see Trace/Debug messages that are already being forwarded:
+```
+-LogCmds="LogGameLiftServerSDK VeryVerbose"
+```
+Or at runtime in the console:
+```
+Log LogGameLiftServerSDK VeryVerbose
+```
+No ini change to `MinLogLevel` is needed — the default Trace already forwards everything.
+
+**Production hard cap (reduce SDK overhead):**
+```ini
+[/Script/GameLiftServerSDK.GameLiftLoggingConfig]
+MinLogLevel=Info
+```
+This prevents the SDK from formatting Trace/Debug messages entirely. Note: you cannot toggle verbosity below Info at runtime with this setting.
+
+**Restore legacy SDK file logging:**
+```ini
+[/Script/GameLiftServerSDK.GameLiftLoggingConfig]
+LogDestination=SDKFile
+```
+In this mode the SDK writes to its own rotating log files at a fixed `Info` level; `MinLogLevel` is not applied.
 
 ## Metrics
 
