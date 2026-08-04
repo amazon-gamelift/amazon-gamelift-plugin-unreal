@@ -1,0 +1,3 @@
+- Adds support for Unreal Engine 5.8 to the plugin and server SDK.
+- Fixes compile errors in the server SDK module in non-unity mode with precompiled headers (PCH) files disabled.
+- Routes server SDK logs to Unreal Engine logging by default, with an option to use legacy SDK file logging.

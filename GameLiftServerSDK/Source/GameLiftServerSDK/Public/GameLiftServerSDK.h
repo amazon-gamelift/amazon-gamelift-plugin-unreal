@@ -14,6 +14,7 @@
 
 #include "Modules/ModuleManager.h"
 #include "Delegates/DelegateCombinations.h"
+#include <atomic>
 
 #if PLATFORM_WINDOWS
 #include "Windows/AllowWindowsPlatformTypes.h"
@@ -27,6 +28,8 @@
 #if PLATFORM_WINDOWS
 #include "Windows/HideWindowsPlatformTypes.h"
 #endif
+
+DECLARE_LOG_CATEGORY_EXTERN(LogGameLiftServerSDK, Log, All);
 
 DECLARE_DELEGATE_OneParam(FOnStartGameSession, Aws::GameLift::Server::Model::GameSession);
 DECLARE_DELEGATE_OneParam(FOnUpdateGameSession, Aws::GameLift::Server::Model::UpdateGameSession);
@@ -152,6 +155,9 @@ public:
     virtual FGameLiftListContainersNetworkInfoOutcome ListContainersNetworkInfo();
 
 private:
+    /** Whether InitSDK() has been successfully called and Destroy() has not yet been called. */
+    std::atomic<bool> bSdkInitialized{false};
+
     /** Handle to the dll we will load */
     static void* GameLiftServerSDKLibraryHandle;
     static bool LoadDependency(const FString& Dir, const FString& Name, void*& Handle);

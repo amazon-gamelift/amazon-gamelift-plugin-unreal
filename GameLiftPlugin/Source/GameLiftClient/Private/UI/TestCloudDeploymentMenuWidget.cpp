@@ -278,13 +278,14 @@ void UTestCloudDeploymentMenuWidget::OnGetGameConnectionResponse(FHttpRequestPtr
 
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
-				FString IpAddress = JsonObject->GetStringField("IpAddress");
-				FString Port = JsonObject->GetStringField("Port");
-				const FString& PlayerSessionId = JsonObject->GetStringField("PlayerSessionId");
-				const FString& PlayerId = JsonObject->GetStringField("PlayerId");
+				FString IpAddress = JsonObject->GetStringField(TEXT("IpAddress"));
+				FString Port = JsonObject->GetStringField(TEXT("Port"));
+				const FString& PlayerSessionId = JsonObject->GetStringField(TEXT("PlayerSessionId"));
+				const FString& PlayerId = JsonObject->GetStringField(TEXT("PlayerId"));
 				const FString& Options = "?PlayerSessionId=" + PlayerSessionId + "?PlayerId=" + PlayerId;
+				const FString GameSessionArn = JsonObject->GetStringField(TEXT("GameSessionArn"));
 
-				UE_LOG(TestCloudDeployment, Log, TEXT("Game connection: GameSessionArn '%s', PlayerSessionId '%s', PlayerId '%s'"), *(JsonObject->GetStringField("GameSessionArn")), *PlayerSessionId, *PlayerId);
+				UE_LOG(TestCloudDeployment, Log, TEXT("Game connection: GameSessionArn '%s', PlayerSessionId '%s', PlayerId '%s'"), *GameSessionArn, *PlayerSessionId, *PlayerId);
 
 				if (MatchmakingInProgress)
 				{
