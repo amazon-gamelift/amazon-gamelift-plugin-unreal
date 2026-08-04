@@ -17,6 +17,109 @@
 
 #define LOCTEXT_NAMESPACE "FGameLiftServerSDKModule"
 
+DEFINE_LOG_CATEGORY(LogGameLiftServerSDK);
+
+#if WITH_GAMELIFT
+/**
+ * Maps an SDK log level to the corresponding Unreal ELogVerbosity value.
+ * Used both for the early-out suppression check and for dispatching the
+ * final UE_LOG call, keeping the two in sync.
+ *
+ * Returns ELogVerbosity::NumVerbosity for levels that should be discarded
+ * outright (Off) — callers must check for this sentinel and return early.
+ */
+static ELogVerbosity::Type MapSdkLogLevelToUEVerbosity(Aws::GameLift::Server::LogLevel Level)
+{
+    switch (Level)
+    {
+    case Aws::GameLift::Server::LogLevel::Trace: return ELogVerbosity::VeryVerbose;
+    case Aws::GameLift::Server::LogLevel::Debug: return ELogVerbosity::Verbose;
+    case Aws::GameLift::Server::LogLevel::Info:  return ELogVerbosity::Log;
+    case Aws::GameLift::Server::LogLevel::Warn:  return ELogVerbosity::Warning;
+    case Aws::GameLift::Server::LogLevel::Error: return ELogVerbosity::Error;
+    // Fatal maps to Error verbosity for suppression purposes — we never use
+    // UE Fatal (which terminates the process).
+    case Aws::GameLift::Server::LogLevel::Fatal: return ELogVerbosity::Error;
+    case Aws::GameLift::Server::LogLevel::Off:   return ELogVerbosity::NumVerbosity;
+    default:                                     return ELogVerbosity::Warning;
+    }
+}
+
+/**
+ * Callback function that routes C++ Server SDK log messages to UE_LOG.
+ * This is passed to the SDK via CustomLoggerConfiguration during InitCustomLogger.
+ *
+ * Thread safety: The SDK serializes callback invocations via an internal mutex
+ * (per SDK documentation). UE_LOG itself is thread-safe (FOutputDeviceRedirector).
+ * This callback may be invoked from any SDK worker thread (WebSocket, ASIO, etc.).
+ */
+static void GameLiftUELogCallback(Aws::GameLift::Server::LogLevel Level, const char* Message, void* /*UserData*/)
+{
+    if (!Message) return;
+
+    // Early-out: check UE's live runtime verbosity BEFORE doing any string work.
+    // This keeps runtime -LogCmds / console toggling effective while avoiding the
+    // cost of truncation, strlen, and UTF8_TO_TCHAR for messages that would be
+    // suppressed anyway.
+    const ELogVerbosity::Type MappedVerbosity = MapSdkLogLevelToUEVerbosity(Level);
+    if (MappedVerbosity == ELogVerbosity::NumVerbosity || LogGameLiftServerSDK.IsSuppressed(MappedVerbosity))
+    {
+        return;
+    }
+
+    // Guard against excessively long messages that could overflow alloca-based
+    // UTF8_TO_TCHAR conversion on worker threads with limited stack space.
+    static constexpr int32 MaxLogMessageLength = 4096;
+    char TruncatedBuffer[MaxLogMessageLength + 1];
+    const char* SafeMessage = Message;
+
+    const int32 MessageLen = FCStringAnsi::Strlen(Message);
+    if (MessageLen > MaxLogMessageLength)
+    {
+        FMemory::Memcpy(TruncatedBuffer, Message, MaxLogMessageLength - 3);
+        TruncatedBuffer[MaxLogMessageLength - 3] = '.';
+        TruncatedBuffer[MaxLogMessageLength - 2] = '.';
+        TruncatedBuffer[MaxLogMessageLength - 1] = '.';
+        TruncatedBuffer[MaxLogMessageLength] = '\0';
+        SafeMessage = TruncatedBuffer;
+    }
+
+    // Dispatch using the mapped verbosity. Fatal retains its [FATAL] prefix for
+    // visibility even though it maps to Error verbosity.
+    switch (Level)
+    {
+    case Aws::GameLift::Server::LogLevel::Fatal:
+        UE_LOG(LogGameLiftServerSDK, Error, TEXT("[FATAL] %s"), UTF8_TO_TCHAR(SafeMessage));
+        break;
+    default:
+        // Dispatch at the mapped verbosity. The outer switch exists only to give
+        // Fatal its [FATAL] prefix; all other levels share this path.
+        switch (MappedVerbosity)
+        {
+        case ELogVerbosity::VeryVerbose:
+            UE_LOG(LogGameLiftServerSDK, VeryVerbose, TEXT("%s"), UTF8_TO_TCHAR(SafeMessage));
+            break;
+        case ELogVerbosity::Verbose:
+            UE_LOG(LogGameLiftServerSDK, Verbose, TEXT("%s"), UTF8_TO_TCHAR(SafeMessage));
+            break;
+        case ELogVerbosity::Log:
+            UE_LOG(LogGameLiftServerSDK, Log, TEXT("%s"), UTF8_TO_TCHAR(SafeMessage));
+            break;
+        case ELogVerbosity::Warning:
+            UE_LOG(LogGameLiftServerSDK, Warning, TEXT("%s"), UTF8_TO_TCHAR(SafeMessage));
+            break;
+        case ELogVerbosity::Error:
+            UE_LOG(LogGameLiftServerSDK, Error, TEXT("%s"), UTF8_TO_TCHAR(SafeMessage));
+            break;
+        default:
+            UE_LOG(LogGameLiftServerSDK, Warning, TEXT("[UnknownLevel:%d] %s"), static_cast<int32>(Level), UTF8_TO_TCHAR(SafeMessage));
+            break;
+        }
+        break;
+    }
+}
+#endif
+
 void* FGameLiftServerSDKModule::GameLiftServerSDKLibraryHandle = nullptr;
 
 static FProcessParameters GameLiftProcessParameters;
@@ -53,6 +156,17 @@ void FGameLiftServerSDKModule::FreeDependency(void*& Handle)
 
 void FGameLiftServerSDKModule::ShutdownModule()
 {
+#if WITH_GAMELIFT
+    if (bSdkInitialized)
+    {
+        auto destroyOutcome = Aws::GameLift::Server::Destroy();
+        if (!destroyOutcome.IsSuccess())
+        {
+            UE_LOG(LogGameLiftServerSDK, Warning, TEXT("SDK Destroy() in ShutdownModule returned error (non-fatal): %s"), UTF8_TO_TCHAR(destroyOutcome.GetError().GetErrorMessage()));
+        }
+        bSdkInitialized = false;
+    }
+#endif
     FreeDependency(GameLiftServerSDKLibraryHandle);
 }
 
@@ -70,10 +184,98 @@ FGameLiftStringOutcome FGameLiftServerSDKModule::GetSdkVersion() {
 #endif
 }
 
+/**
+ * Parses a log level string into the corresponding SDK LogLevel enum value.
+ * Supported values: "Trace", "Debug", "Info", "Warn", "Error", "Fatal", "Off" (case-insensitive).
+ * Returns the provided DefaultLevel for unrecognized strings.
+ */
+#if WITH_GAMELIFT
+static Aws::GameLift::Server::LogLevel ParseLogLevel(const FString& LevelStr, Aws::GameLift::Server::LogLevel DefaultLevel)
+{
+    if (LevelStr.Equals(TEXT("Trace"), ESearchCase::IgnoreCase)) return Aws::GameLift::Server::LogLevel::Trace;
+    if (LevelStr.Equals(TEXT("Debug"), ESearchCase::IgnoreCase)) return Aws::GameLift::Server::LogLevel::Debug;
+    if (LevelStr.Equals(TEXT("Info"), ESearchCase::IgnoreCase))  return Aws::GameLift::Server::LogLevel::Info;
+    if (LevelStr.Equals(TEXT("Warn"), ESearchCase::IgnoreCase))  return Aws::GameLift::Server::LogLevel::Warn;
+    if (LevelStr.Equals(TEXT("Error"), ESearchCase::IgnoreCase)) return Aws::GameLift::Server::LogLevel::Error;
+    if (LevelStr.Equals(TEXT("Fatal"), ESearchCase::IgnoreCase)) return Aws::GameLift::Server::LogLevel::Fatal;
+    if (LevelStr.Equals(TEXT("Off"), ESearchCase::IgnoreCase))   return Aws::GameLift::Server::LogLevel::Off;
+    if (!LevelStr.IsEmpty())
+    {
+        UE_LOG(LogGameLiftServerSDK, Warning, TEXT("Unrecognized MinLogLevel '%s', defaulting to Trace"), *LevelStr);
+    }
+    return DefaultLevel;
+}
+#endif
+
+/**
+ * Reads the LogDestination setting from DefaultGame.ini [/Script/GameLiftServerSDK.GameLiftLoggingConfig] section.
+ * Returns CustomLoggerConfiguration that routes SDK logs through UE_LOG when LogDestination=UELog (default),
+ * or empty parameters (SDK default file+stdout logging) when LogDestination=SDKFile.
+ *
+ * Configuration (DefaultGame.ini):
+ *   [/Script/GameLiftServerSDK.GameLiftLoggingConfig]
+ *   LogDestination=UELog
+ *   MinLogLevel=Trace
+ */
+#if WITH_GAMELIFT
+static Aws::GameLift::Server::CustomLoggerConfiguration GetConfiguredLogParameters()
+{
+    FString LogDestination = TEXT("UELog");
+    FString MinLogLevelStr = TEXT("Trace");
+
+    // Guard against GConfig being null (e.g., during very early startup or commandlet contexts).
+    // Fall back to defaults (UELog destination, Trace minimum level) when unavailable.
+    if (GConfig != nullptr)
+    {
+        GConfig->GetString(TEXT("/Script/GameLiftServerSDK.GameLiftLoggingConfig"), TEXT("LogDestination"), LogDestination, GGameIni);
+        GConfig->GetString(TEXT("/Script/GameLiftServerSDK.GameLiftLoggingConfig"), TEXT("MinLogLevel"), MinLogLevelStr, GGameIni);
+    }
+
+    if (LogDestination.Equals(TEXT("UELog"), ESearchCase::IgnoreCase))
+    {
+        // Default to Trace: all SDK messages reach the callback so that UE's runtime
+        // verbosity toggling (-LogCmds, console "Log LogGameLiftServerSDK <level>")
+        // works as expected. Actual filtering happens in the callback via
+        // IsSuppressed(). Setting MinLogLevel above Trace is an opt-in production
+        // hard cap that prevents the SDK from even formatting suppressed messages,
+        // at the cost of disabling runtime toggling above the cap.
+        const Aws::GameLift::Server::LogLevel MinLevel = ParseLogLevel(MinLogLevelStr, Aws::GameLift::Server::LogLevel::Trace);
+        return Aws::GameLift::Server::CustomLoggerConfiguration(GameLiftUELogCallback, nullptr, MinLevel);
+    }
+
+    // "SDKFile": empty parameters — SDK uses its own file+stdout logging.
+    // Return default-constructed CustomLoggerConfiguration with null callback.
+    return Aws::GameLift::Server::CustomLoggerConfiguration{};
+}
+
+/**
+ * Attempt to initialize SDK logging before InitSDK() so that SDK initialization
+ * diagnostics are routed to UE_LOG from the very start. Only calls InitCustomLogger when
+ * a callback is configured (LogDestination=UELog); a null callback is rejected by
+ * the SDK. Failures are warned but never abort — this is best-effort.
+ */
+static void TryInitCustomLogger()
+{
+    auto logParams = GetConfiguredLogParameters();
+    if (logParams.callback != nullptr)
+    {
+        auto logOutcome = Aws::GameLift::Server::InitCustomLogger(logParams);
+        if (!logOutcome.IsSuccess())
+        {
+            // ALREADY_INITIALIZED is non-fatal (idempotent); warn but continue.
+            UE_LOG(LogGameLiftServerSDK, Warning, TEXT("InitCustomLogger returned error: %s"), UTF8_TO_TCHAR(logOutcome.GetError().GetErrorMessage()));
+        }
+    }
+}
+#endif
+
 FGameLiftGenericOutcome FGameLiftServerSDKModule::InitSDK() {
 #if WITH_GAMELIFT
+    TryInitCustomLogger();
+
     auto initSDKOutcome = Aws::GameLift::Server::InitSDK();
     if (initSDKOutcome.IsSuccess()) {
+        bSdkInitialized = true;
         return FGameLiftGenericOutcome(nullptr);
     }
     else{
@@ -97,8 +299,13 @@ FGameLiftGenericOutcome FGameLiftServerSDKModule::InitSDK(const FServerParameter
     sdkServerParameters.SetSecretKey(TCHAR_TO_UTF8(*serverParameters.m_secretKey));
     sdkServerParameters.SetSessionToken(TCHAR_TO_UTF8(*serverParameters.m_sessionToken));
 
+    // Call InitCustomLogger BEFORE InitSDK so that SDK initialization diagnostics are
+    // routed to UE_LOG from the very start.
+    TryInitCustomLogger();
+
     auto initSDKOutcome = Aws::GameLift::Server::InitSDK(sdkServerParameters);
     if (initSDKOutcome.IsSuccess()) {
+        bSdkInitialized = true;
         return FGameLiftGenericOutcome(nullptr);
     }
     else{
@@ -207,6 +414,7 @@ FGameLiftGenericOutcome FGameLiftServerSDKModule::Destroy()
 #if WITH_GAMELIFT
     auto outcome = Aws::GameLift::Server::Destroy();
     if (outcome.IsSuccess()) {
+        bSdkInitialized = false;
         return FGameLiftGenericOutcome(nullptr);
     }
     else {

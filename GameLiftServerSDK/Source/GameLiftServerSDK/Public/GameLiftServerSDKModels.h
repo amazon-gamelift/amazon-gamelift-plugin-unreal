@@ -11,6 +11,9 @@
 */
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Misc/DateTime.h"
+
 enum class GAMELIFTSERVERSDK_API EPlayerSessionCreationPolicy
 {
     NOT_SET,

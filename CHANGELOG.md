@@ -1,5 +1,10 @@
 CHANGELOG
 
+# 3.4.0 (8/4/2026)
+- Adds support for Unreal Engine 5.8 to the plugin and server SDK.
+- Fixes compile errors in the server SDK module in non-unity mode with precompiled headers (PCH) files disabled.
+- Routes server SDK logs to Unreal Engine logging by default, with an option to use legacy SDK file logging.
+
 # 3.3.0 (6/18/2026)
 - Adds the ListContainersNetworkInfo() server SDK action to retrieve network information for all containers running on the same instance of a managed container fleet, enabling container-to-container discovery.
 

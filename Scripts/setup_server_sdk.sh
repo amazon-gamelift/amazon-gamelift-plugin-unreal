@@ -4,7 +4,7 @@
 
 set -e
 
-SDK_URL="https://github.com/amazon-gamelift/amazon-gamelift-servers-cpp-server-sdk/releases/download/v5.5.0/GameLift-Cpp-ServerSDK-5.5.0.zip"
+SDK_URL="https://github.com/amazon-gamelift/amazon-gamelift-servers-cpp-server-sdk/releases/download/v5.6.0/GameLift-Cpp-ServerSDK-5.6.0.zip"
 CURRENT_DIR="$(pwd)"
 TEMP_FOLDER="$CURRENT_DIR/Temp"
 DOWNLOAD_FOLDER="$TEMP_FOLDER/downloads"
